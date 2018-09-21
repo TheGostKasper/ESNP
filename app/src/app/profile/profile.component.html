@@ -1,0 +1,122 @@
+<div class="row" *ngIf="solider">
+    <div class="col-3">
+        <div class="card">
+            <img class="card-img-top" src="assets/img/default-avatar.png" alt="Card image cap">
+            <div class="card-body tr">
+                <div class="card-title">
+                    <p>
+                        <span>الاسم:</span>
+                        <span>{{solider.empType}}-{{solider.name}}</span>
+                    </p>
+                    <p class="">
+                        <span>السن: </span>
+                        <span>{{solider.age}}</span>
+                    </p>
+                    <p class="">
+                        <span>تاريخ الالتحاق: </span>
+                        <span>{{solider.joinDate | date:'dd/MM/yyyy'}}</span>
+                    </p>
+                    <p class="">
+                        <span>تاريخ الانتهاء: </span>
+                        <span>{{solider.leaveDate | date:'dd/MM/yyyy'}}</span>
+                    </p>
+                    <p>
+                        <span>العنوان:</span> {{solider.address}}</p>
+                    <p class="">
+                        <span>الرقم العسكري: </span>{{solider.militaryId}}</p>
+                    <p class="">
+                        <span>البريد الاليكتروني: </span>{{solider.email}}</p>
+                    <p class="">
+                        <span>رقم الهاتف: </span>{{solider.phone}}</p>
+                    <p class="">
+                        <span>التقييم: </span>{{solider.rate}}</p>
+                    <p class="">
+                        <span>الحالة: </span>
+                        <span *ngIf="solider.onDuty">خدمة</span>
+                        <span *ngIf="!solider.onDuty">خالي</span>
+                    </p>
+                </div>
+            </div>
+            <div class="card-body">
+            </div>
+        </div>
+    </div>
+    <div class="col-9">
+        <div class="col-md-12">
+            <ul id="tabsJustified" class="nav nav-tabs">
+                <li class="nav-item mr-md-1">
+                    <a href="" data-target="#home1" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true" aria-expanded="true"
+                        class="nav-link active show">
+                        <i class="fa fa-user pr-1"></i> الخدمات</a>
+                </li>
+
+                <li class="nav-item mr-md-1">
+                    <a href="" data-target="#salary" data-toggle="tab" class="nav-link" (click)="getSalaries()"><i class="fa fa-money pr-1"></i> المرتب</a>
+                </li>
+                <li class="nav-item mr-md-1">
+                    <a href="" data-target="#profile1" data-toggle="tab" class="nav-link">التقارير</a>
+                </li>
+                <li class="nav-item mr-md-1">
+                    <a href="" data-target="#requests" data-toggle="tab" class="nav-link">طلبات أخري</a>
+                </li>
+            </ul>
+            <br>
+            <div id="tabsJustifiedContent" class="tab-content">
+                <div id="home1" class="tab-pane fade active show">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>اسم الخدمة</th>
+                                <th>رقم الغفرة</th>
+                                <th>التاريخ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="solider.extra.shiftAreas.length==0">
+                                <td colspan="4">لا توجد اي بيانات </td>
+                            </tr>
+                            <tr *ngFor="let srv of solider.extra.shiftAreas | paginate: { itemsPerPage: 10, currentPage: p } | slice:0:80 as total; index as i;">
+                                <td>{{ i+1 }}</td>
+                                <td>{{srv.serviceArea}}</td>
+                                <td>{{srv.shiftNumber +1}}</td>
+                                <td>{{srv.distDate | date:'dd/MM/yyyy'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+
+                </div>
+
+                <div id="salary" class="tab-pane fade">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>النوع</th>
+                                <th>قيمة النقود</th>
+                                <th>الشهر</th>
+                                <th>تاريخ التسجيل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="salaries.length==0">
+                                <td colspan="4">لا توجد اي بيانات </td>
+                            </tr>
+                            <tr *ngFor="let sal of salaries |  slice:0:80 as total; index as i;">
+                                <td>{{ i+1 }}</td>
+                                <td>{{sal.name}}</td>
+                                <td>{{sal.paidMoney}}</td>
+                                <td>{{sal.month | date:'MM-yyyy'}}</td>
+                                <td>{{sal.created_at | date:'dd/MM/yyyy hh:mm'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="profile1" class="tab-pane fade">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

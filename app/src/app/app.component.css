@@ -1,0 +1,270 @@
+body{
+    background: #a92943;
+}
+span.im-caret {
+    -webkit-animation: 1s blink step-end infinite;
+    animation: 1s blink step-end infinite;
+}
+
+@keyframes blink {
+    from, to {
+        border-right-color: black;
+    }
+    50% {
+        border-right-color: transparent;
+    }
+}
+
+@-webkit-keyframes blink {
+    from, to {
+        border-right-color: black;
+    }
+    50% {
+        border-right-color: transparent;
+    }
+}
+
+span.im-static {
+    color: grey;
+}
+
+div.im-colormask {
+    display: inline-block;
+    border-style: inset;
+    border-width: 2px;
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+div.im-colormask > input {
+    position: absolute;
+    display: inline-block;
+    background-color: transparent;
+    color: transparent;
+    -webkit-appearance: caret;
+    -moz-appearance: caret;
+    appearance: caret;
+    border-style: none;
+    left: 0; /*calculated*/
+}
+
+div.im-colormask > input:focus {
+    outline: none;
+}
+
+div.im-colormask > input::-moz-selection{
+    background: none;
+}
+
+div.im-colormask > input::selection{
+    background: none;
+}
+div.im-colormask > input::-moz-selection{
+    background: none;
+}
+
+div.im-colormask > div {
+    color: black;
+    display: inline-block;
+    width: 100px; /*calculated*/
+}
+.app-container{
+    padding: 20px;
+    margin: 0px;
+}
+li a.active.show {
+    opacity: 1;
+    background: #a92943;
+    color: white;
+}
+tr{
+    text-align: center
+}
+.btn-group{
+    display: inline-flex;
+}
+.right{
+    float: right;
+}
+.pm-btn{
+    margin: 15px 5px;
+    padding: 10px;
+}
+.bs-margin{
+    margin: 0px 2px;
+}
+.bs-row{
+    padding: 2px;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+ }
+ thead > tr{
+    background: #a75a61;
+}
+tr >th{
+    color: white;
+    /* padding: 10px;
+    margin: 0px;
+    vertical-align: middle;
+    min-width: 100px; */
+}
+.tr{
+    text-align: right;
+    } 
+.app-black{
+    width: 150px;
+    height: 200px;
+    background: orange;
+}
+.lis-search i {
+    position: absolute;
+    top: 19px;
+    left: 15px;
+}
+
+.lis-primary {
+    color: #ff214f !important;
+}
+.form-control{
+    height:51px !important;
+}
+.nav-tabs .nav-link {
+    color: #707070;
+    background-color: #e5e5e5;
+}
+.nav-tabs .nav-link {
+    border: 1px solid transparent;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+.nav-link {
+    display: block;
+}
+.nav-link, .navbar {
+    padding: .5rem 1rem;
+}
+a {
+    text-decoration: none;
+}
+
+input:active,input:focus{
+    box-shadow: none;
+}
+select:active,select:focus{
+    box-shadow: none;
+}
+.panel-group .panel+.panel {
+    margin-top: 5px;
+}
+.panel-group .panel {
+    margin-bottom: 0;
+    border-radius: 4px;
+}
+.card-primary {
+    background: #3a5d7b;
+    color: white;
+}
+.crd-pm{
+    background: #f8f9fa;
+    box-shadow: #ff214f;
+}
+
+.app-badge {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: #777;
+    border-radius: 10px;
+}
+.mt-10{
+    margin-top: 10px;
+}
+.txt-center {
+    text-align: center;
+}
+.txt-right{
+    text-align: right;
+}
+.right{
+    float: right;
+}
+.pm-0{
+    padding: 0px;
+    margin: 0px;
+}
+.nme{
+    padding-right: 10px;
+}
+.m-scroll-top {
+    width: 40px;
+    height: 40px;
+    position: fixed;
+    bottom: 40px;
+    right: 20px;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    padding-top: 9px;
+    z-index: 110;
+    border-radius: 100%;
+    background: rgb(170, 43, 43);
+    color: white;
+}
+.app-pr{
+    padding: 0px 10px;
+}
+.app-mr{
+    text-align: right;
+    display: inline-block;
+}
+.left{
+    float: left;
+}
+
+ul.nav.nav-tabs.flex-column{
+    justify-content: center;
+}
+.pointer{
+    cursor: pointer;
+}
+.modal-header{
+    justify-content: center;
+}
+
+.tbpd{
+    /* background: #ef5071; */
+    padding: 10px;
+    /* border-radius: 4px; */
+    margin-top: 10px;
+    border-bottom: 1px solid #ced4da;
+}
+.pd-lbl{
+    padding-top: 17px;
+    font-size: 27px;
+}
+label.control-label{
+    padding-top: 17px;
+}
+.bg-warning{
+    background: #a92943 !important;
+    color: white;
+}
+
+input{
+    text-align: center;
+}
+select{
+    text-align: center;
+}
+.tab-content{
+    padding: 25px;
+}

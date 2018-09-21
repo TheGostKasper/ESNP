@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="user_profile right">
+        <img src="assets/img/new_logo.png" alt="Manga" class="user_img dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" [routerLink]="['/solider',current_user._id]">الصفحة الشخصية</a>
+            <a class="dropdown-item" href="#"></a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" (click)="logout()">تسجيل خروج</a>
+        </div>
+        <span class="user_name">{{current_user.name}}</span>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+            <li routerLinkActive="active" class="nav-item" *ngFor="let menuItem of menuItems">
+                <a [routerLink]="[menuItem.path]" class="nav-link">
+                    <!-- <span>
+                        <i class="material-icons">{{menuItem.icon}}</i>
+                    </span> -->
+                    {{menuItem.title}}
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

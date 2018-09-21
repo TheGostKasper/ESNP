@@ -1,0 +1,59 @@
+{
+"fields":[
+    {
+        "name": "name", "nameAR": "الاسم بالكامل", "placeholder": "", "required": true, "type": "text"
+    },
+    {
+        "name": "address", "nameAR": "العنوان", "placeholder": "", "required": true, "type": "text"
+    },
+    {
+        "name": "password", "nameAR": "رقم المرور", "placeholder": "", "required": true, "type": "text"
+    },
+    {
+        "name": "email", "nameAR": "البريد الالكتروني", "placeholder": "", "required": true, "type": "text"
+    },
+    {
+        "name": "phone", "nameAR": "رقم التليفون", "placeholder": "", "required": true, "type": "text"
+    },
+    {
+        "name": "militaryId", "nameAR": "الرقم العسكري", "placeholder": "", "required": true, "type": "text"
+    },
+    {
+        "name": "dateOfBirth", "nameAR": "", "placeholder": "", "required": true, "type": "date"
+    },
+    {
+        "name": "joinDate", "nameAR": "تاريخ الالتحاق", "placeholder": "", "required": true, "type": "date"
+    },
+    {
+        "name": "leaveDate", "nameAR": "تاريخ نهاية الخدمة", "placeholder": "", "required": true, "type": "date"
+    },
+    {
+        "name": "image", "nameAR": "صورة شخصية", "placeholder": "", "required": true, "type": "file"
+    },
+    {
+        "name": "rate", "nameAR": "التقييم الكلي", "placeholder": "", "required": true, "type": "text"
+    },
+    {
+        "name": "onDuty", "nameAR": "حالة الجندي من الخدمة", "placeholder": "", "required": true, "values": ["خدمة", "راحة"], "type": "select"
+    },
+    {
+        "name": "empType", "nameAR": "الدرجة", "placeholder": "", "required": true, "values": [], "type": "select"
+    },
+    {
+        "name": "section", "nameAR": "", "placeholder": "", "required": true, "values": [], "type": "select"
+    },
+    {
+        "name": "vacation", "nameAR": "", "placeholder": "", "required": true, "values": [], "type": "select"
+    },
+    {
+        "name": "vacationPeriod", "nameAR": "رقم الدورية", "placeholder": "", "required": true, "type": "number"
+    },
+    {
+        "name": "numberServices", "nameAR": "عدد الخدمات", "placeholder": "", "required": true, "type": "number"
+    },
+    {
+        "name": "extraServices", "nameAR": "عدد الخدمات الزيادة", "placeholder": "", "required": true, "type": "number"
+    }
+]    
+
+}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/app-green.css">
+</head>
+
+<body>
+
+    <div class="back ng-scope">
+        <div class="errors col-sm-8 col-sm-offset-2"></div>
+        <div class="login-outer">
+            <div class="login-wrap">
+                <div class="login-left striped-bg text-center">
+                    <a ui-sref="home" class="logo-lg" href="#/dashboard/home">
+                        <i class="fa fa-paper-plane"></i> Dashy Theme </a>
+                    <div class="slogan">An AngularJS Theme</div>
+                </div>
+                <div class="login-right striped-bg">
+                    <!-- uiView:  -->
+                    <div ui-view="" class="ng-scope">
+                        <div class="heading ng-scope">Login to your Account</div>
+                        <div class="input ng-scope">
+                            <form class="form-horizontal ng-pristine ng-valid" role="form" ng-submit="submit()">
+                                <input type="hidden" name="_token" value="6z7mfMW1GwKzG2sgsG9icqN1bfcJTooGwIOySP22">
+                                <div class="login-input-group">
+                                    <span class="login-input-group-addon">
+                                        <i class="fa fa-at fa-fw"></i>
+                                    </span>
+                                    <input type="email" class="form-control" name="email" placeholder="email"> </div>
+                                <div class="login-input-group">
+                                    <span class="login-input-group-addon">
+                                        <i class="fa fa-key fa-fw"></i>
+                                    </span>
+                                    <input type="password" class="form-control" placeholder="password" name="password"> </div>
+                                <button type="submit" class="btn btn-default btn-lg submit">Login</button>
+                            </form>
+                            <div class="login-other text-right">Or Login with
+                                <a href="javascript:;" class="m-l-sm">
+                                    <i class="fa fa-facebook"></i>
+                                </a>
+                                <a href="javascript:;" class="m-l-sm">
+                                    <i class="fa fa-twitter"></i>
+                                </a>
+                                <a href="javascript:;" class="m-l-sm">
+                                    <i class="fa fa-google-plus gplus"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="rightFooter ng-scope">
+                            <a ui-sref="signup" href="#/signup">Don't have an Account?</a>
+                            <a ui-sref="forgot-password" class="m-l" href="#/forgot-password">Forgot Password?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/jquery-3.2.1.slim.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+</body>
+
+</html>

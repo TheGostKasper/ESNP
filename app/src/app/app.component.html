@@ -1,0 +1,12 @@
+<div class="main-wrapper" *ngIf="token">
+    <div class=" header">
+        <app-sidebar></app-sidebar>
+    </div>
+    <div class="app-container">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+
+<div *ngIf="!token">
+    <app-login></app-login>
+</div>

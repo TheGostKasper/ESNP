@@ -1,0 +1,64 @@
+<div class="auth-wrapper d-flex no-block justify-content-center align-items-center">
+    <div class="auth-box">
+        <div id="loginform">
+            <div class="logo">
+                <span class="db">
+                    <img alt="logo" src="./../../assets/img/logo-icon.png">
+                </span>
+                <h5 class="font-medium m-b-20">تسجيل الدخول</h5>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <form class="form-horizontal m-t-20" id="loginform" #authForm="ngForm" (ngSubmit)="login(user)">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    <i class="fa fa-user"></i>
+                                </span>
+                            </div>
+                            <input aria-describedby="basic-addon1" [(ngModel)]="user.militaryId" name="militaryId" aria-label="Email" class="form-control form-control"
+                                placeholder="الرقم العسكري" type="text" required  id="militaryId">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon2">
+                                    <i class="fa fa-key fa-fw"></i>
+                                </span>
+                            </div>
+                            <input aria-describedby="basic-addon1" aria-label="Password" name="password" [(ngModel)]="user.password" class="form-control form-control"
+                                placeholder="كلمة المرور" type="password" required>
+                        </div>
+                        <div class="form-group text-center">
+                            <div class="col-xs-12 p-b-20">
+                                <input class="btn btn-block btn btn-info" type="submit" [disabled]="authForm.invalid" value="دخول">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- <div id="recoverform">
+            <div class="logo">
+                <span class="db">
+                    <img alt="logo" src="./../../assets/img/logo-icon.png">
+                </span>
+                <h5 class="font-medium m-b-20">Recover Password</h5>
+                <span>Enter your Email and instructions will be sent to you!</span>
+            </div>
+            <div class="row m-t-20">
+                <form class="col-12">
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <input class="form-control form-control" placeholder="Username" required="" type="email">
+                        </div>
+                    </div>
+                    <div class="row m-t-20">
+                        <div class="col-12">
+                            <button class="btn btn-block btn btn-danger" name="action" type="submit">Reset</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div> -->
+    </div>
+</div>

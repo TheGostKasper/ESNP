@@ -1,0 +1,37 @@
+<form class="form-horizontal" #appForm="ngForm" (ngSubmit)="nelected(appForm.value)">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">اضافة عنصر جديد</h4>
+            </div>
+            <div class="modal-body">
+                <div class="bs-row form-group" *ngFor="let field of fields| slice:0:10 as total; index as i">
+                    <label for="{{field.id}}" class="col-sm-2 control-label">{{field.nameAR}}</label>
+                    <div class="col-sm-8" *ngIf="!field.values">
+                        <input type="{{field.type}}" required="{{field.required}}" id="{{field.name}}" name="{{field.name}}" ngModel class="form-control"
+                            placeholder="{{field.placeholder}}">
+                    </div>
+                    <div class="col-sm-8" *ngIf="field.values">
+                        <select id="{{field.id}}" name="{{field.name}}" class="app-ctrl" ngModel>
+                            <option *ngFor="let opt of field.values| slice:0:10 as total; index as i" value="{{opt}}">{{opt}}
+                                <option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row form-group">
+                    <div class="col-sm-offset-2 col-sm-8">
+                        <button type="submit" class="btn btn-primary" [disabled]="appForm.invalid">اضافة</button>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-offset-2 col-sm-8">
+                        <button type="button" class="btn btn-danger" id="cancle" data-dismiss="modal">الغاء</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

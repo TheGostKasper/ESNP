@@ -1,0 +1,157 @@
+<div class="row justify-content-center pt-5">
+    <div class="col-12 col-md-10 text-center wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+        <div class="heading pb-5">
+            <h1 class="display-4">البحث عن الجنود</h1>
+        </div>
+        <ul class="nav nav-tabs flex-column flex-sm-row" id="myTab" role="tablist">
+            <li class="nav-item mr-md-1">
+                <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"
+                    aria-expanded="true">
+                    <i class="fa fa-user pr-1"></i> الجنود</a>
+            </li>
+            <li class="nav-item mr-md-1">
+                <a href="#home1" data-target="#home1" data-toggle="tab" class="nav-link" (click)="getData()">
+                    <i class="fa fa-building pr-1"></i> بيانات المحاور</a>
+            </li>
+            <li class="nav-item mr-md-1">
+                <a href="" data-target="#distribute" data-toggle="tab" class="nav-link ">
+                    <i class="fa fa-plane pr-1"></i> توزيع الدوريات</a>
+            </li>
+            <li class="nav-item mr-md-1">
+                    <a href="" data-target="#sol_distribute" data-toggle="tab" class="nav-link ">
+                        <i class="fa fa-plane pr-1"></i> توزيع الاجازات</a>
+                </li>
+        </ul>
+        <div class="tab-content bg-white p-5 rounded-bottom rounded-right" id="myTabContent">
+            <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab" aria-expanded="true">
+                <div class="row">
+                    <div class="col-6 col-md-6">
+                        <div class="form-group">
+                            <input type="text" [(ngModel)]="srch" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" placeholder="البحث بالرقم العسكري او اسم الجندي ؟">
+                            <div class="lis-search">
+                                <i class="fa fa-search lis-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 col-sm-4 col-lg-4">
+                        <div class="form-group">
+                            <select id="period" name="period" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="period">
+                                <option value="0" selected>اخنر نظام الاجازة</option>
+                                <option *ngFor="let vct of vacations | slice:0:20 as total; index as i" value="{{i+1}}">{{vct.name}}</option>
+                            </select>
+                            <div class="lis-search">
+                                <i class="fa fa-tags lis-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 col-md-2 col-lg-2">
+                        <button class="btn btn-primary btn-block btn-lg" (click)="filterSoliders(period)">
+                            بحث
+                            <i class="fa fa-search pr-1"></i>
+                        </button>
+                    </div>
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>الاسم</th>
+                                <th>الرقم العسكري</th>
+                                <th>عدد الخدمات</th>
+                                <th>رقم الدورية </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="f_soliders.length==0">
+                                <td colspan="5">لا توجد اي بيانات </td>
+                            </tr>
+                            <tr *ngFor="let sol of f_soliders | paginate: { itemsPerPage: 10, currentPage: p } | slice:0:80 as total; index as i;">
+                                <td>{{ i+1 }}</td>
+                                <td>{{sol.name}}</td>
+                                <td>{{sol.militaryId}}</td>
+                                <td>{{sol.extra.shiftAreas.length}}</td>
+                                <td>{{sol.vacationPeriod}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                </div>
+            </div>
+            <div id="home1" class="tab-pane fade">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>المحور</th>
+                            <th>الوصف</th>
+                            <th>التقيم</th>
+                            <th>عدد الجنود</th>
+                            <th>تاريخ التسجيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="arr_obj.length==0">
+                            <td colspan="6">لا توجد اي بيانات </td>
+                        </tr>
+                        <tr *ngFor="let arr of arr_obj | slice:0:20 as total; index as i">
+                            <td>{{ i+1 }}</td>
+                            <td>{{arr.section.name}}</td>
+                            <td>{{arr.section.describtion}}</td>
+                            <td>{{arr.section.rate}} / 10</td>
+                            <td>{{arr.employees.length}}</td>
+                            <td>{{arr.section.created_at | date:'dd/MM/yyyy'}}</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="distribute" class="tab-pane fade ">
+                <div class="row">
+                    <div class="col-10 col-md-10 col-sm-10">
+                        <div class="form-group">
+                            <select id="sys_period" name="sys_period" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="sys_period"
+                                (change)="changeSystem()">
+                                <option value="0" selected>اخنر نظام توزيع الدوريات</option>
+                                <option value="2">7/7</option>
+                                <option value="3">14/7</option>
+                                <option value="4">21/10</option>
+                            </select>
+                            <div class="lis-search">
+                                <i class="fa fa-search lis-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 col-md-2 col-lg-2">
+                        <button class="btn btn-primary btn-block btn-lg" (click)="periodicVacation()" [disabled]="sys_period==0">
+                            توزيع
+                            <i class="fa fa-search pr-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="sol_distribute" class="tab-pane fade ">
+                <div class="row">
+                    <div class="col-10 col-md-10 col-sm-10">
+                        <div class="form-group">
+                            <select id="period" name="period" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="prv_period">
+                                <option value="0" selected>اخنر نظام الاجازة</option>
+                                <option *ngFor="let vct of vacations | slice:0:20 as total; index as i" value="{{i+1}}">{{vct.name}}</option>
+                            </select>
+                            <div class="lis-search">
+                                <i class="fa fa-tags lis-primary"></i>
+                            </div>
+                            <div class="lis-search">
+                                <i class="fa fa-search lis-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 col-md-2 col-lg-2">
+                        <button class="btn btn-primary btn-block btn-lg" (click)="prvApply(prv_period)" [disabled]="prv_period==0">
+                            توزيع 
+                            <i class="fa fa-search pr-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

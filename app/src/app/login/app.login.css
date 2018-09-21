@@ -1,0 +1,57 @@
+.auth-wrapper .auth-box {
+    background: #f8f9fa82;
+    padding: 20px;
+    box-shadow: 1px 0 20px rgba(0,0,0,.08);
+    max-width: 400px;
+    width: 90%;
+    margin: 10% 0;
+    min-height: 500px;
+}
+#loginform{
+    margin-top: 40px;
+}
+.auth-wrapper .auth-box .logo {
+    text-align: center;
+}
+img {
+    vertical-align: middle;
+    border-style: none;
+}
+html body .font-medium {
+    font-weight: 500;
+}
+.input-group-text {
+    display: flex;
+    align-items: center;
+    padding: .375rem .75rem;
+    margin-bottom: 0;
+    font-size: .875rem;
+    font-weight: 300;
+    line-height: 1.5;
+    color: #4f5467;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 2px;
+}
+.text-center {
+    text-align: center!important;
+}
+.m-b-20{
+    margin-bottom: 20px;
+}
+.m-t-20{
+    margin-top: 20px;
+}
+.mb-3, .my-3 {
+    margin-bottom: 1rem!important;
+}
+input.ng-dirty , input.ng-invalid{
+    border: 1px solid red;
+}
+.input-group-text{
+    height: 100%;
+    width: 40px;
+    padding: 0px 14px;
+}

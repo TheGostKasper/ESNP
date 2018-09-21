@@ -1,0 +1,252 @@
+<div class="row justify-content-center pt-5">
+    <div class="col-12 col-md-10 text-center wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+        <div class="heading pb-5">
+            <h1 class="display-4">توزيع الخدمات والاجازات علي الجنود</h1>
+        </div>
+        <ul class="nav nav-tabs flex-column flex-sm-row" id="myTab" role="tablist">
+            <li class="nav-item mr-md-1">
+                <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"
+                    aria-expanded="true">
+                    <i class="fa fa-user pr-1"></i> توزيع الخدمات</a>
+            </li>
+            <li class="nav-item mr-md-1" (click)="getDists()">
+                <a href="" data-target="#prev_dst" data-toggle="tab" class="nav-link ">
+                    <i class="fa fa-plane pr-1"></i> الخدمات السابقة </a>
+            </li>
+            <li class="nav-item mr-md-1">
+                <a href="" data-target="#p_dst" data-toggle="tab" class="nav-link ">
+                    <i class="fa fa-plane pr-1"></i> توزيع الدوريات</a>
+            </li>
+            <li class="nav-item mr-md-1">
+                <a href="" data-target="#dur_dst" data-toggle="tab" class="nav-link ">
+                    <i class="fa fa-plane pr-1"></i> توزيع الاجازات</a>
+            </li>
+        </ul>
+        <div class="tab-content bg-white rounded-bottom rounded-right" id="myTabContent">
+            <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab" aria-expanded="true">
+                <div class="row">
+                    <button class="right btn btn-primary pm-btn" (click)="distribute()">
+                        <span class="glyphicon glyphicon-remove">توزيع جديد</span>
+                    </button>
+                    <button class="left btn btn-primary pm-btn" (click)="saveChanges()" *ngIf="save">
+                        <span class="glyphicon glyphicon-remove"> حفظ التغيرات</span>
+                    </button>
+                    <button class="right btn btn-danger pm-btn" (click)="resetDist()">
+                        <span class="glyphicon glyphicon-remove">الخدمات الغاء </span>
+                    </button>
+                    <button class="right btn btn-danger pm-btn" (click)="resetVacationPeriod()">
+                        <span class="glyphicon glyphicon-remove"> الغاء </span>
+                    </button>
+                </div>
+                <div class="row">
+                    <div *ngIf="ctrSrvs.length==0" class="col-12 col-lg-12 col-sm-12 warning">
+                        <h2 colspan="5">اضغط توزيع جديد لاظهار التوزيع العشوائي للجنود ثم اضغط حفظ التغيرات لحفظ البيانات </h2>
+                        <!-- <ul class="list-group pm-0">
+                            <li *ngFor="let sol of curr" class="list-group-item txt-right pointer">
+                                <span class="nme">{{sol.name}}</span>
+                                <span class="nme">{{sol._id}}</span>
+                            </li>
+                        </ul> -->
+                    </div>
+                    <div class="col-3 col-sm-6 col-md-4 col-lg-3" *ngFor="let sdu of ctrSrvs">
+                        <div class="card mt-10">
+                            <div class="card-header card-primary text-center">
+                                {{sdu.srvSec.name}}
+                            </div>
+                            <div class="card-body crd-pm">
+                                <ul class="list-group pm-0">
+                                    <li *ngFor="let sol of sdu.srvSolds | slice:0:80 as total; index as i;" class="list-group-item txt-right pointer">
+                                        <span data-toggle="modal" data-target=".bs-change-solider" class="left" (click)="replace_target(sdu,sol)">
+                                            <i class="fa fa-refresh pr-1"></i>
+                                        </span>
+                                        <span class="nme">{{sol.name}}</span>
+                                        <span class="app-badge right">{{i+1}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="prev_dst" class="tab-pane fade">
+                <div class="row tbpd">
+                    <label for="inputname" class="col-3 col-sm-3 col-form-label pd-lbl"> ابحث بتاريخ التوزيع</label>
+                    <div class="col-6 col-sm-6">
+                        <input type="date" [(ngModel)]="fdate" (input)="fDate(fdate)" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4">
+                        <div class="lis-search">
+                            <i class="fa fa-search lis-primary"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div *ngIf="fdists.length==0" class="col-12 col-lg-12 col-sm-12 warning">
+                        <h2 colspan="5">لا توجد بيانات </h2>
+                    </div>
+                    <div class="row" *ngFor="let dsts of fdists | paginate: { itemsPerPage: 1, currentPage: p }">
+                        <div class="col-3 col-sm-6 col-md-4 col-lg-3" *ngFor="let dst of dsts.soliders ">
+                            <div class="card mt-10">
+                                <div class="card-header card-primary text-center">
+                                    {{dst.srvAre}}
+                                </div>
+                                <div class="card-body crd-pm">
+                                    <ul class="list-group pm-0">
+                                        <li *ngFor="let sol of dst.srcSolds | slice:0:80 as total; index as i;" class="list-group-item txt-right ">
+                                            <span class="nme">{{sol.name}}</span>
+                                            <span class="app-badge right">{{i+1}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <pagination-controls (pageChange)="p = $event" class="left"></pagination-controls>
+
+            </div>
+            <div id="p_dst" class="tab-pane fade ">
+                <div class="row">
+                    <div class="col-10 col-md-10 col-sm-10">
+                        <div class="form-group">
+                            <select id="sys_period" name="sys_period" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="sys_period">
+                                <option value="0" selected>اخنر نظام توزيع الدوريات</option>
+                                <option value="2">7/7</option>
+                                <option value="3">14/7</option>
+                                <option value="4">21/7</option>
+                            </select>
+                            <div class="lis-search">
+                                <i class="fa fa-search lis-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 col-md-2 col-lg-2">
+                        <button class="btn btn-primary btn-block btn-lg" (click)="periodicVacation()" [disabled]="sys_period==0">
+                            توزيع
+                            <i class="fa fa-search pr-1"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="btn btn-primary btn-block btn-lg" (click)="showPeriodics()" [disabled]="sys_period==0">
+                        حفظ
+                        <i class="fa fa-search pr-1"></i>
+                    </button>
+                    <div class="col-4 col-sm-6 col-md-4 col-lg-4" *ngFor="let prd of  prdc_vct ">
+                        <div class="card mt-10">
+                            <div class="card-header card-primary text-center">
+                                <span class="left"> {{prd.period}} </span>
+                                <span class="right"> {{prd.sec_name}} </span>
+                            </div>
+                            <div class="card-body crd-pm">
+                                <ul class="list-group pm-0">
+                                    <li *ngFor="let sol of prd.soliders" class="list-group-item txt-right ">
+                                        <span class="nme">{{sol.name}}</span>
+                                        <span data-toggle="modal" data-target=".bs-rplc-solider" class="left pointer" (click)="replace_target(prd,sol)">
+                                            <i class="fa fa-refresh pr-1"></i>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="dur_dst" class="tab-pane fade ">
+                <div class="row">
+                    <div class="col-10 col-md-10 col-sm-10">
+                        <div class="form-group">
+                            <select id="period" name="period" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="prv_period">
+                                <option value="0" selected>اخنر دورية الاجازة</option>
+                                <option *ngFor="let vct of vacations | slice:0:20 as total; index as i" value="{{i+1}}">{{vct.name}}</option>
+                            </select>
+                            <div class="lis-search">
+                                <i class="fa fa-tags lis-primary"></i>
+                            </div>
+                            <div class="lis-search">
+                                <i class="fa fa-search lis-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 col-md-2 col-lg-2">
+                        <button class="btn btn-primary btn-block btn-lg" (click)="prvApply(prv_period)" [disabled]="prv_period==0">
+                            توزيع
+                            <i class="fa fa-search pr-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade bs-change-solider" tabIndex="-1" role="dialog" aria-labelledby="bsChangeSolider">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="edtModal">استبدال</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12 col-md-12">
+                                <div class="form-group">
+                                    <input type="text" [(ngModel)]="srch" (input)="filterSoliders(srch)" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4"
+                                        placeholder="البحث بالرقم العسكري او اسم الجندي ؟">
+                                    <div class="lis-search">
+                                        <i class="fa fa-search lis-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <ul class="list-group pm-0">
+                            <li *ngFor="let sol of srchSoliders | slice:0:10 as total; index as i;" class="list-group-item txt-right pointer" (click)="curr_sol_destination(sol)">
+                                <span class="nme">{{sol.name}}</span>
+                                <span class="app-badge right">{{i+1}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="button-group">
+                            <button type="button" class="btn btn-primary" id="cancleModal" data-dismiss="modal">الغاء</button>
+                            <button type="button" class="btn btn-danger" (click)="replace_destination()">تبديل</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade bs-rplc-solider" tabIndex="-1" role="dialog" aria-labelledby="bsReplaceSolider">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="eidtModal">استبدال</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12 col-md-12">
+                                <div class="form-group">
+                                    <input type="text" [(ngModel)]="srch" (input)="prSoliders(srch)" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4"
+                                        placeholder="البحث بالرقم العسكري او اسم الجندي ؟">
+                                    <div class="lis-search">
+                                        <i class="fa fa-search lis-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <ul class="list-group pm-0">
+                            <li *ngFor="let sol of rplcSoliders | slice:0:10 as total; index as i;" class="list-group-item txt-right pointer" (click)="curr_sol_destination(sol)">
+                                <span class="nme">{{sol.name}}</span>
+                                <span class="app-badge right">{{i+1}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="button-group">
+                            <button type="button" class="btn btn-primary" id="canclePrModal" data-dismiss="modal">الغاء</button>
+                            <button type="button" class="btn btn-danger" (click)="pr_target()">تبديل</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

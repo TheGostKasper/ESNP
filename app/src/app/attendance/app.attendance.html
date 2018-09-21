@@ -1,0 +1,204 @@
+<div class="row justify-content-center pt-5">
+    <div class="col-12 col-md-10 text-center wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+        <div class="heading pb-5">
+            <h1 class="display-4">تسجيل الحضور والانصراف</h1>
+        </div>
+        <ul class="nav nav-tabs flex-column flex-sm-row" id="myTab" role="tablist">
+            <li class="nav-item mr-md-1">
+                <a class="nav-link active show" id="sol-tab" data-toggle="tab" href="#sol" role="tab" aria-controls="home" aria-selected="true"
+                    aria-expanded="true">
+                    <i class="fa fa-user pr-1"></i> الجنود</a>
+            </li>
+
+            <li class="nav-item mr-md-1">
+                <a href="" data-target="#sol_vis" data-toggle="tab" class="nav-link ">
+                    <i class="fa fa-plane pr-1"></i>الزوار</a>
+            </li>
+        </ul>
+        <div class="tab-content bg-white p-5 rounded-bottom rounded-right" id="myTabContent">
+            <div class="tab-pane fade active show" id="sol" role="tabpanel" aria-labelledby="sol-tab" aria-expanded="true">
+                <div class="row">
+                    <div class="col-6 col-md-6">
+                        <div class="form-group">
+                            <input type="text" [(ngModel)]="srch" (input)="filterSoliders()" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4"
+                                placeholder="البحث بالرقم العسكري او اسم الجندي ؟">
+                            <div class="lis-search">
+                                <i class="fa fa-search lis-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 col-sm-3 col-lg-3">
+                        <div class="form-group">
+                            <select id="vprd" name="vprd" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="vprd"
+                                (change)="filterSoliders()">
+                                <option value="0" selected>اختر نظام الاجازة</option>
+                                <option *ngFor="let vct of vacations | slice:0:20 as total; index as i" value="{{i+1}}">{{vct.name}}</option>
+                            </select>
+                            <div class="lis-search">
+                                <i class="fa fa-tags lis-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 col-sm-3 col-lg-3">
+                        <div class="form-group">
+                            <select id="vprd" name="vprd" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="avb"
+                                (change)="filterSoliders()">
+                                <option value="0" selected>كل العناصر</option>
+                                <option value="false">اجازة</option>
+                                <option value="true">متواجد</option>
+                            </select>
+                            <div class="lis-search">
+                                <i class="fa fa-tags lis-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>الاسم</th>
+                                <th>الرقم العسكري</th>
+                                <th>عدد الخدمات</th>
+                                <th>رقم الدورية </th>
+                                <th>الحالة</th>
+                                <th>تسجيل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="f_soliders.length==0">
+                                <td colspan="7">لا توجد اي بيانات </td>
+                            </tr>
+                            <tr *ngFor="let sol of f_soliders  | slice:0:25 as total; index as i;">
+                                <td>{{ i+1 }}</td>
+                                <td>{{sol.name}}</td>
+                                <td>{{sol.militaryId}}</td>
+                                <td>{{sol.extra.shiftAreas.length}}</td>
+                                <td>{{sol.vacationPeriod}}</td>
+                                <td>{{sol.available? 'حاضر' : 'خارج'}}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="bs-margin btn btn-primary" data-toggle="modal" [disabled]="sol.available" data-target=".bs-example-modal-sm"
+                                            (click)="confirmSelection(sol)">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"> دخول</span>
+                                        </button>
+                                        <button class="bs-margin btn btn-danger" [disabled]="!sol.available" data-toggle="modal" data-target=".bs-example-modal-sm"
+                                            (click)="confirmSelection(sol)">
+                                            <span class="glyphicon glyphicon-geer" aria-hidden="true"> خروج</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                   
+                </div>
+            </div>
+            <div id="sol_vis" class="tab-pane fade ">
+
+                <div class="row">
+                    <div class="col-4 col-md-4">
+                        <div class="form-group">
+                            <input type="text" [(ngModel)]="attendance.name" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4"
+                                placeholder="اسم الزائر">
+                            <div class="lis-search">
+                                <i class="fa fa-search lis-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-6">
+                        <div class="form-group">
+                            <input type="text" [(ngModel)]="attendance.visitReason" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4"
+                                placeholder="سبب الزيارة">
+                            <div class="lis-search">
+                                <i class="fa fa-search lis-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 col-md-2 col-lg-2">
+                        <button class="btn btn-primary btn-block btn-lg" (click)="addAttendance(attendance)">
+                            اضافة
+                            <i class="fa fa-search pr-1"></i>
+                        </button>
+                    </div>
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>الاسم</th>
+                                <th>سبب الزيارة</th>
+                                <th>تاريخ الدخول</th>
+                                <th>تاريخ الخروج</th>
+                                <th>تسجيل</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="attendances.length==0">
+                                <td colspan="6">لا توجد اي بيانات </td>
+                            </tr>
+                            <tr *ngFor="let arr of attendances | paginate: { itemsPerPage: 10, currentPage: p } | slice:0:80 as total; index as i;">
+                                <td>{{ i+1 }}</td>
+                                <td>{{arr.name}}</td>
+                                <td>{{arr.visitReason}}</td>
+                                <td>{{arr.enterDate | date:'dd/MM/yyyy hh:mm'}}</td>
+                                <td>{{arr.leaveDate | date:'dd/MM/yyyy hh:mm'}}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="bs-margin btn btn-primary" [disabled]="arr.status" (click)="updateAttCMV(arr)">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"> دخول</span>
+                                        </button>
+                                        <button class="bs-margin btn btn-info" [disabled]="!arr.status" (click)="updateAttCMV(arr)">
+                                            <span class="glyphicon glyphicon-geer" aria-hidden="true"> خروج</span>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button type="button" class="bs-margin btn btn-danger" data-toggle="modal" data-target=".bs-modal-sm" (click)="cSelection(arr)">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true">حذف</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade bs-modal-sm" tabIndex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h4 class="modal-title" id="myModalLabel">تحذير</h4>
+            </div>
+            <div class="modal-body">
+                هل انت متأكد ؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="caal" data-dismiss="modal">الغاء</button>
+                <button type="button" class="btn btn-danger" (click)="deleteAttendance()">حذف</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" tabIndex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h4 class="modal-title" id="myModalLabel">تحذير</h4>
+            </div>
+            <div class="modal-body">
+                هل انت متأكد ؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="cancleModal" data-dismiss="modal">الغاء</button>
+                <button type="button" class="btn btn-danger" (click)="updateAttendance()">تسجيل</button>
+            </div>
+        </div>
+    </div>
+</div>

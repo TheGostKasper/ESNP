@@ -1,0 +1,54 @@
+tr{
+    text-align: center
+}
+.btn-group{
+    display: inline-flex;
+}
+.right{
+    float: right;
+}
+.pm-btn{
+    margin: 5px 0px;
+}
+.bs-margin{
+    margin: 0px 2px;
+}
+.bs-row{
+    padding: 2px;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+thead > tr{
+    background: black;
+}
+tr >th{
+    color: white;
+    padding: 10px;
+    margin: 0px;
+    vertical-align: middle;
+    min-width: 100px;
+}
+
+.app-black{
+    width: 150px;
+    height: 200px;
+    background: orange;
+}
+input.ng-invalid.ng-dirty {
+    border: 3px red solid;
+}
+.app-ctrl{
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.25;
+    color: #fff;
+    background-color: #434857;
+    background-image: none;
+    background-clip: padding-box;
+    border: 1px solid #434857;
+    border-radius: 0.25rem;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
