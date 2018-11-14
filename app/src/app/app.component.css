@@ -177,12 +177,12 @@ select:active,select:focus{
     padding: 3px 7px;
     font-size: 12px;
     font-weight: 700;
-    line-height: 1;
+    /* line-height: 1; */
     color: #fff;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
-    background-color: #777;
+    background-color: #3a5d7b;
     border-radius: 10px;
 }
 .mt-10{
@@ -236,6 +236,10 @@ ul.nav.nav-tabs.flex-column{
 .pointer{
     cursor: pointer;
 }
+.list-group-item{
+
+    padding: 10px 4px;
+}
 .modal-header{
     justify-content: center;
 }
@@ -267,4 +271,28 @@ select{
 }
 .tab-content{
     padding: 25px;
+}
+.bc{
+    /* width: 500px; */
+    color: white;
+    margin: 1px;
+    border-radius: 8px;
+}
+.bc-exm{
+    background: #0e4380;
+}
+.bc-nozom{
+    background: #28a745;
+}
+.bc-pln{
+    background: #0f6197;
+}
+.bc-sec {
+    background:#7bc139;
+}
+.bc-def {
+    background:#c1399f;
+}
+.card-body{
+    padding: 0px !important;
 }

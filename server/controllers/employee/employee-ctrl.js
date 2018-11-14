@@ -89,7 +89,7 @@ module.exports = function (app) {
     }
 
     async function getEmployeeAsync(option) {
-        return await Employee.find(option).populate('section').sort({ onDuty: 1 }).exec();
+        return await Employee.find(option).populate('section').populate('vacation').sort({ onDuty: 1 }).exec();
     }
     // async function getEmployeeFilterAsync(config) {
 
@@ -97,7 +97,7 @@ module.exports = function (app) {
     // }
     async function getLastAsync(body) {
         try {
-            return await Employee.findOne(body).populate('section').exec();
+            return await Employee.findOne(body).populate('section').populate('vacation').exec();
         } catch (error) {
             res.send({ data: null, err: error });
         }

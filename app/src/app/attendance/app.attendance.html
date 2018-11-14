@@ -134,7 +134,7 @@
                         </thead>
                         <tbody>
                             <tr *ngIf="attendances.length==0">
-                                <td colspan="6">لا توجد اي بيانات </td>
+                                <td colspan="7">لا توجد اي بيانات </td>
                             </tr>
                             <tr *ngFor="let arr of attendances | paginate: { itemsPerPage: 10, currentPage: p } | slice:0:80 as total; index as i;">
                                 <td>{{ i+1 }}</td>
@@ -193,11 +193,17 @@
                 <h4 class="modal-title" id="myModalLabel">تحذير</h4>
             </div>
             <div class="modal-body">
-                هل انت متأكد ؟
+                <div class="form-group">
+                    <input type="text" [(ngModel)]="visitReason" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4"
+                        placeholder="من فضلك اذكر السبب !">
+                    <div class="lis-search">
+                        <i class="fa fa-search lis-primary"></i>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" id="cancleModal" data-dismiss="modal">الغاء</button>
-                <button type="button" class="btn btn-danger" (click)="updateAttendance()">تسجيل</button>
+                <button type="button" class="btn btn-danger" (click)="updateAttendance(visitReason)">تسجيل</button>
             </div>
         </div>
     </div>

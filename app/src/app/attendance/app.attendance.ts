@@ -85,31 +85,33 @@ export class AttendanceComponent implements OnInit {
             body: _attendance
         }).subscribe((res: any) => {
             this.displayError(res);
-            this.attendances.push(res.data)
+            if (res.data)
+                this.attendances.push(res.data)
         });
     }
 
-    updateAttendance() {
-        const _attendance = this.curr_attendance;
+    updateAttendance(visitReason?: '') {
+        const _attendance = { ...this.curr_attendance };
+
         _attendance.updated_at = new Date();
         _attendance.available = !this.curr_attendance.available;
+
+
         this.crudService.put({
-            url: `api/employee/${this.curr_attendance._id}`,
+            url: `api/employee/${_attendance._id}`,
             body: _attendance
         }).subscribe((res: any) => {
             this.displayError(res);
-            if (_attendance.available) {
-                this.simplifyAddition({ name: _attendance.name, visitReason: 'عودة الي الوحدة', status: true });
-            } else {
-                // so what should you do when he clicks خروج ? should you update the status only or you have to find a way to get the 
-                // _id of the attendance item itself and upate the row like hiting the table, filter the data and get the match _id !?
-                // go grap some water and get some rest you look tired after all  
-            }
+            this.curr_attendance.available = _attendance.available;
+            let obj = { name: _attendance.name, visitReason: visitReason, status: _attendance.available, soliderId: _attendance._id }
+            if (obj.status)
+                this.simplifyAddition(obj);
             document.getElementById('cancleModal').click();
         });
     }
 
     updateAttCMV(_attendance) {
+
         _attendance.updated_at = new Date();
         _attendance.status = !_attendance.status;
         _attendance.leaveDate = new Date();
@@ -118,6 +120,9 @@ export class AttendanceComponent implements OnInit {
             body: _attendance
         }).subscribe((res: any) => {
             this.displayError(res);
+            if (_attendance.soliderId) {
+                this.curr_attendance.available = !this.curr_attendance.available;
+            };
         });
     }
 
@@ -152,3 +157,10 @@ export class AttendanceComponent implements OnInit {
     }
 
 }
+/**
+ * Store : The warehouse to store anythings like devices, machines, books  or even food ....
+ * each itme must have these properties => name , sectionId , description , image , amount , price , notes , status
+ * 
+ * Another thing we have to mind that we have to categorized all items thu (Categories , SubCategories)  
+ * 
+ */

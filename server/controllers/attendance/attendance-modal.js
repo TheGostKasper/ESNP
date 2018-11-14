@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var attendanceSchema = new Schema({
     name: String,
     visitReason: String,
+    soliderId: String,
     status: { type: Boolean, required: true },
     enterDate: { type: Date, required: true },
     leaveDate: { type: Date, required: false },

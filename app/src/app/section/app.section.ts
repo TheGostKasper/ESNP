@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CRUDService } from '../services/app.crud';
-// import { FormBuilder, FormGroup } from '@angular/forms'
 
 @Component({
     selector: 'app-section',
@@ -9,33 +8,30 @@ import { CRUDService } from '../services/app.crud';
 })
 export class SectionComponent implements OnInit {
     sections = [];
-    curr_section = {
-        _id: '', name: '', describtion: ''
+    vacationTypes = []
+    obj_glob = {
+        _id: '', name: '', describtion: '', vacationType: { _id: '', name: '' }
     }
-    section = {
-        name: '', describtion: ''
-    }
+    curr_section = { _id: '', ...this.obj_glob }
+    section = { ...this.obj_glob }
+    
     p: Number = 1;
-    fields = [{
-        name: 'name', nameAR: 'اسم المحور', placeholder: 'اسم المحور', required: true, id: 'name', type: 'text'
-    },
-    {
-        name: 'describtion', nameAR: 'وصف المحور', placeholder: 'وصف المحور', required: true, id: 'describtion', type: 'text'
-    },
-    {
-        name: 'rate', nameAR: 'تقييم المحور', placeholder: 'تقيم المحور', required: true, id: 'rate', type: 'text'
-    }
-        // {
-        //     name: 'options',nameAR:'اختيارات', placeholder: '', required: true, values: ['manga', 'mubo', 'abi'], id: 'gun_id', type: 'select'
-        // }
-    ]
+
     constructor(private crudService: CRUDService) {
     }
 
     ngOnInit() {
         this.getSections();
+        this.getVacationTypes();
     }
-
+    getVacationTypes() {
+        this.crudService.get({
+            url: 'api/vacationType'
+        }).subscribe((res: any) => {
+            this.displayError(res);
+            this.vacationTypes = res.data;
+        });
+    }
     getSections() {
         this.crudService.get({
             url: 'api/section'
@@ -54,17 +50,21 @@ export class SectionComponent implements OnInit {
         }).subscribe((res: any) => {
             this.displayError(res);
             this.sections.push(res.data)
-            document.getElementById('cancle').click();
+            document.getElementById('cancleAddition').click();
         });
     }
     updateSection(section) {
-        const _section = { ...section };
+        let _section = { ...section };
+        let results = this.vacationTypes.filter(e => _section.vacationType._id === e._id)[0]
+
         _section.updated_at = new Date();
+
         this.crudService.put({
-            url: `api/section/${section._id}`,
+            url: `api/section/${_section._id}`,
             body: _section
         }).subscribe((res: any) => {
             this.displayError(res);
+            section.vacationType = { ...results };
             document.getElementById('cancleEditable').click();
         });
     }

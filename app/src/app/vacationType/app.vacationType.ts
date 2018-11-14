@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CRUDService } from '../services/app.crud';
 import { DatePipe } from '@angular/common';
-import * as _ from 'lodash';
+
 
 @Component({
-    selector: 'app-vacation',
-    templateUrl: './app.vacation.html',
+    selector: 'app-vacationType',
+    templateUrl: './app.vacationType.html',
     styleUrls: ['./../app.component.css']
 })
-export class VacationComponent implements OnInit {
+export class VacationTypeComponent implements OnInit {
     vacations = [];
     curr_vacation = {
         _id: '', name: '', start: '', end: ''
@@ -18,12 +18,8 @@ export class VacationComponent implements OnInit {
     }
     fields = [{
         name: 'name', nameAR: 'نوع الاجازة', placeholder: 'نوع الاجازة', required: true, id: 'name', type: 'text'
-    },
-    {
-        name: 'start', nameAR: 'تبدأ من', placeholder: 'تبدأ من', required: true, id: 'start', type: 'date'
-    },
-    {
-        name: 'end', nameAR: 'تنتهي في', placeholder: 'تنتهي في', required: true, id: 'end', type: 'date'
+    }, {
+        name: 'durationCount', nameAR: 'عدد الدفعات', placeholder: 'عدد دفعات الاجازة', required: true, id: 'durationCount', type: 'number'
     }
     ]
 
@@ -38,7 +34,7 @@ export class VacationComponent implements OnInit {
 
     getVacations() {
         this.crudService.get({
-            url: 'api/vacation'
+            url: 'api/vacationType'
         }).subscribe((res: any) => {
             this.displayError(res);
             this.vacations = res.data;
@@ -49,11 +45,11 @@ export class VacationComponent implements OnInit {
         _vacation.created_at = new Date();
 
         this.crudService.post({
-            url: 'api/vacation',
+            url: 'api/vacationType',
             body: _vacation
         }).subscribe((res: any) => {
             this.displayError(res);
-            
+            console.log(res.data);
             this.vacations.push(res.data)
             document.getElementById('cancle').click();
         });
@@ -62,7 +58,7 @@ export class VacationComponent implements OnInit {
         const _vacation = { ...vacation };
         _vacation.updated_at = new Date();
         this.crudService.put({
-            url: `api/vacation/${vacation._id}`,
+            url: `api/vacationType/${vacation._id}`,
             body: _vacation
         }).subscribe((res: any) => {
             this.displayError(res);
@@ -71,13 +67,10 @@ export class VacationComponent implements OnInit {
     }
     confirmSelection(vacation) {
         this.curr_vacation = vacation;
-        this.curr_vacation.start = this.convertDate(vacation.start)
-        this.curr_vacation.end = this.convertDate(vacation.end)
     }
-
     deleteVacation() {
         this.crudService.delete({
-            url: `api/vacation/${this.curr_vacation._id}`,
+            url: `api/vacationType/${this.curr_vacation._id}`,
         }).subscribe((res: any) => {
             this.displayError(res);
             const _vacations = this.vacations;
@@ -87,13 +80,10 @@ export class VacationComponent implements OnInit {
     }
     getVacation(_id) {
         this.crudService.get({
-            url: `api/vacation/${_id}`
+            url: `api/vacationType/${_id}`
         }).subscribe((res: any) => {
             this.displayError(res);
         });
-    }
-    convertDate(date) {
-        return this.datePipe.transform(date, 'yyyy-MM-dd')
     }
 
     displayError(res) {

@@ -1,8 +1,8 @@
 <div class="row justify-content-center pt-5">
     <div class="col-12 col-md-10 text-center wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
-        <div class="heading pb-5">
+        <!-- <div class="heading pb-5">
             <h1 class="display-4">توزيع الخدمات والاجازات علي الجنود</h1>
-        </div>
+        </div> -->
         <ul class="nav nav-tabs flex-column flex-sm-row" id="myTab" role="tablist">
             <li class="nav-item mr-md-1">
                 <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"
@@ -25,18 +25,18 @@
         <div class="tab-content bg-white rounded-bottom rounded-right" id="myTabContent">
             <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab" aria-expanded="true">
                 <div class="row">
-                    <button class="right btn btn-primary pm-btn" (click)="distribute()">
-                        <span class="glyphicon glyphicon-remove">توزيع جديد</span>
+                    <button class="col-4 btn btn-primary pm-btn" (click)="distribute()">
+                        <span class="">توزيع جديد</span>
                     </button>
-                    <button class="left btn btn-primary pm-btn" (click)="saveChanges()" *ngIf="save">
-                        <span class="glyphicon glyphicon-remove"> حفظ التغيرات</span>
+                    <button class="col-4 btn btn-danger pm-btn" (click)="saveChanges()" *ngIf="save">
+                        <span class=""> حفظ التغيرات</span>
                     </button>
-                    <button class="right btn btn-danger pm-btn" (click)="resetDist()">
+                    <!-- <button class="right btn btn-danger pm-btn" (click)="resetDist()">
                         <span class="glyphicon glyphicon-remove">الخدمات الغاء </span>
                     </button>
                     <button class="right btn btn-danger pm-btn" (click)="resetVacationPeriod()">
                         <span class="glyphicon glyphicon-remove"> الغاء </span>
-                    </button>
+                    </button> -->
                 </div>
                 <div class="row">
                     <div *ngIf="ctrSrvs.length==0" class="col-12 col-lg-12 col-sm-12 warning">
@@ -82,7 +82,23 @@
                     <div *ngIf="fdists.length==0" class="col-12 col-lg-12 col-sm-12 warning">
                         <h2 colspan="5">لا توجد بيانات </h2>
                     </div>
-                    <div class="row" *ngFor="let dsts of fdists | paginate: { itemsPerPage: 1, currentPage: p }">
+                    <div *ngFor="let dsts of fdists | paginate: { itemsPerPage: 1, currentPage: p }" style="display: inline-flex">
+                        <div class="" *ngFor="let dst of dsts.soliders ">
+                            <div class="">
+                                <div class="">
+                                    {{dst.srvAre}}
+                                </div>
+                                <div class="">
+                                    <ul class="">
+                                        <li *ngFor="let sol of dst.srcSolds | slice:0:80 as total; index as i;" style="display:inline-flex">
+                                            <span class="">{{sol.name}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="row" *ngFor="let dsts of fdists | paginate: { itemsPerPage: 1, currentPage: p }">
                         <div class="col-3 col-sm-6 col-md-4 col-lg-3" *ngFor="let dst of dsts.soliders ">
                             <div class="card mt-10">
                                 <div class="card-header card-primary text-center">
@@ -98,7 +114,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <pagination-controls (pageChange)="p = $event" class="left"></pagination-controls>
 
@@ -130,7 +146,7 @@
                         حفظ
                         <i class="fa fa-search pr-1"></i>
                     </button>
-                    <div class="col-4 col-sm-6 col-md-4 col-lg-4" *ngFor="let prd of  prdc_vct ">
+                    <div class="col-{{12/sys_period}} " *ngFor="let prd of  prdc_vct ">
                         <div class="card mt-10">
                             <div class="card-header card-primary text-center">
                                 <span class="left"> {{prd.period}} </span>
@@ -154,7 +170,8 @@
                 <div class="row">
                     <div class="col-10 col-md-10 col-sm-10">
                         <div class="form-group">
-                            <select id="period" name="period" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="prv_period">
+                            <select id="period" name="period" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="prv_period"
+                                (change)="fprdsol(prv_period)">
                                 <option value="0" selected>اخنر دورية الاجازة</option>
                                 <option *ngFor="let vct of vacations | slice:0:20 as total; index as i" value="{{i+1}}">{{vct.name}}</option>
                             </select>
@@ -167,10 +184,18 @@
                         </div>
                     </div>
                     <div class="col-2 col-md-2 col-lg-2">
-                        <button class="btn btn-primary btn-block btn-lg" (click)="prvApply(prv_period)" [disabled]="prv_period==0">
+                        <button class="btn btn-primary btn-block btn-lg" (click)="prvApply(prv_period)" [disabled]="prv_period==0 || prdSolider.length==0">
                             توزيع
                             <i class="fa fa-search pr-1"></i>
                         </button>
+                    </div>
+                    <div class="row">
+                        <div *ngFor="let sol of prdSolider" class="list-group-item col-2 col-sm-4 col-md-3 {{(sol.section.name==='نظم')?'bc-nozom':(sol.section.name==='الفني')?'bc-exm':(sol.section.name==='الخطط')?'bc-pln':'bc-sec'}}">
+                            <a class="nme">
+                                <span class="right">{{sol.name}}</span>
+                                <span class="left"> {{sol.section.name}}</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -204,8 +229,8 @@
                     </div>
                     <div class="modal-footer">
                         <div class="button-group">
-                            <button type="button" class="btn btn-primary" id="cancleModal" data-dismiss="modal">الغاء</button>
-                            <button type="button" class="btn btn-danger" (click)="replace_destination()">تبديل</button>
+                            <button type="button" class="btn btn-primary" (click)="replace_destination()">استبدال</button>
+                            <button type="button" class="btn btn-danger" id="cancleModal" data-dismiss="modal">الغاء</button>
                         </div>
 
                     </div>
@@ -240,8 +265,8 @@
                     </div>
                     <div class="modal-footer">
                         <div class="button-group">
-                            <button type="button" class="btn btn-primary" id="canclePrModal" data-dismiss="modal">الغاء</button>
-                            <button type="button" class="btn btn-danger" (click)="pr_target()">تبديل</button>
+                            <button type="button" class="btn btn-primary" (click)="pr_target()">استبدال</button>
+                            <button type="button" class="btn btn-danger" id="canclePrModal" data-dismiss="modal">الغاء</button>
                         </div>
 
                     </div>

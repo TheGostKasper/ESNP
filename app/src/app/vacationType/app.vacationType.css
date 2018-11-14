@@ -1,0 +1,37 @@
+﻿tr{
+    text-align: center
+}
+.btn-group{
+    display: inline-flex;
+}
+.right{
+    float: right;
+}
+.pm-btn{
+    margin: 5px 0px;
+}
+.bs-margin{
+    margin: 0px 2px;
+}
+.bs-row{
+    padding: 2px;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+thead > tr{
+    background: black;
+}
+tr >th{
+    color: white;
+    padding: 10px;
+    margin: 0px;
+    vertical-align: middle;
+    min-width: 100px;
+}
+
+.app-black{
+    width: 150px;
+    height: 200px;
+    background: orange;
+}

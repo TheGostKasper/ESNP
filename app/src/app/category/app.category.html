@@ -1,31 +1,26 @@
-
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
             <th>#</th>
-            <th>الاسم</th>
-            <th>الوصف</th>
-            <th>قيمة النقود</th>
+            <th>الصنف</th>
             <th>تاريخ التسجيل</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngIf="salaries.length==0">
-            <td colspan="6">لا توجد اي بيانات </td>
+        <tr *ngIf="categories.length==0">
+            <td colspan="4">لا توجد اي بيانات </td>
         </tr>
-        <tr *ngFor="let salary of salaries | paginate: { itemsPerPage: 10, currentPage: p } | slice:0:80 as total; index as i;">
+        <tr *ngFor="let category of categories | paginate: { itemsPerPage: 10, currentPage: p } | slice:0:80 as total; index as i;">
             <td>{{ i+1 }}</td>
-            <td>{{salary.employee.name}}</td>
-            <td>{{salary.name}}</td>
-            <td>{{salary.paidMoney}}</td>
-            <td>{{salary.month | date:'dd/MM/yyyy'}}</td>
+            <td>{{category.name}}</td>
+            <td>{{category.created_at | date:'dd/MM/yyyy'}}</td>
             <td>
                 <div class="btn-group">
-                    <button type="button" class="bs-margin btn btn-danger" data-toggle="modal" data-target=".bs-example-modal-sm" (click)="confirmSelection(salary)">
+                    <button type="button" class="bs-margin btn btn-danger" data-toggle="modal" data-target=".bs-example-modal-sm" (click)="confirmSelection(category)">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true">حذف</span>
                     </button>
-                    <button class="bs-margin btn btn-info" data-toggle="modal" data-target=".bs-edit-salary" (click)="confirmSelection(salary)">
+                    <button class="bs-margin btn btn-info" data-toggle="modal" data-target=".bs-edit-category" (click)="confirmSelection(category)">
                         <span class="glyphicon glyphicon-geer" aria-hidden="true">تعديل</span>
                     </button>
                 </div>
@@ -35,8 +30,41 @@
 </table>
 <pagination-controls (pageChange)="p = $event"></pagination-controls>
 
-<div class="modal fade bs-edit-salary" tabIndex="-1" role="dialog" aria-labelledby="bsEditable" dir="rtl">
-    <form class="form-horizontal" (ngSubmit)="updatesalary(curr_salary)">
+<div class="modal fade bs-add-category" tabIndex="-1" role="dialog" aria-labelledby="bsAddcategory">
+    <!-- <ns-root [fields]="fields" (nelected)="addcategory($event)"></ns-root> -->
+    <form class="form-horizontal" (ngSubmit)="addCategory(category)">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="edtModal">اضافة</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row form-group">
+                        <label for="inputname" class="col-sm-2 control-label">الاسم</label>
+                        <div class="col-sm-8">
+                            <input type="text" required id="name" name="name" [(ngModel)]="category.name" required class="form-control" placeholder="اسم الصنف">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row form-group">
+                        <div class="col-sm-offset-2 col-sm-8">
+                            <button type="submit" class="btn btn-primary">اضافة</button>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-sm-offset-2 col-sm-8">
+                            <button type="button" class="btn btn-danger" id="cancleAddition" data-dismiss="modal">الغاء</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade bs-edit-category" tabIndex="-1" role="dialog" aria-labelledby="bsEditable" dir="rtl">
+    <form class="form-horizontal" (ngSubmit)="updateCategory(curr_category)">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -46,20 +74,7 @@
                     <div class="row form-group">
                         <label for="inputname" class="col-sm-2 control-label">الاسم</label>
                         <div class="col-sm-8">
-                            <input type="text" required id="e_name" name="e_name" [(ngModel)]="curr_salary.name" required class="form-control" placeholder="اسم المحور">
-                        </div>
-                    </div>
-
-                    <div class="row form-group">
-                        <label for="inputdescription" class="col-sm-2 control-label">الوصف</label>
-                        <div class="col-sm-8">
-                            <input type="text" required class="form-control" placeholder="وصف المحور" name="describtion" required [(ngModel)]="curr_salary.describtion">
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <label for="inputrate" class="col-sm-2 control-label">التقييم</label>
-                        <div class="col-sm-8">
-                            <input type="text" required class="form-control" placeholder="تقييم المحور" name="rate" required [(ngModel)]="curr_salary.rate">
+                            <input type="text" required id="e_name" name="e_name" [(ngModel)]="curr_category.name" required class="form-control" placeholder="اسم الصنف">
                         </div>
                     </div>
                 </div>
@@ -91,8 +106,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" id="cancleModal" data-dismiss="modal">الغاء</button>
-                <button type="button" class="btn btn-danger" (click)="deleteSalary()">حذف</button>
+                <button type="button" class="btn btn-danger" (click)="deleteCategory()">حذف</button>
             </div>
         </div>
     </div>
+</div>
+
+<div id="m_scroll_top" class="m-scroll-top" data-toggle="modal" data-target=".bs-add-category">
+    <i class="fa fa-plus"></i>
 </div>

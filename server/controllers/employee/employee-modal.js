@@ -14,6 +14,7 @@ var employeeSchema = new Schema({
     image: { type: String, required: false },
     rate: { type: Number, required: false },
     onDuty: { type: Boolean, required: false },
+    dutiable: { type: Boolean, required: false },
     // currentShift: { type: Number, required: true },
     // prevShift: { type: Number, required: true },
     empType: { type: String, required: true },
@@ -24,10 +25,10 @@ var employeeSchema = new Schema({
         }
     },
     age: { type: Number, required: false },
-    numberServices: { type: Number, required: false },
+    servicesNumber: { type: Number, required: false },
     extraServices: { type: Number, required: false },
     section: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Section' },
-    vacation: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Vacation' },
+    vacation: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'VacationType' },
     created_at: Date,
     updated_at: Date,
 });

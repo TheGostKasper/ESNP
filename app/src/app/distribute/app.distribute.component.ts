@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CRUDService } from '../services/app.crud';
 import { DatePipe } from '@angular/common';
 
+
 @Component({
     selector: 'app-distribute-area',
     templateUrl: './app.distribute.component.html',
@@ -19,13 +20,20 @@ export class DistributeComponent implements OnInit {
     arr_obj = []
     soliders_arr = []
     vacations = []
+    vacationTypes = []
     _prds = []
+    srchSoliders = []
+    rplcSoliders = []
+    extSrvs = []
+
     sys_period = 0;
     period = 0;
     prv_period = 0;
-    srchSoliders = []
+
     curr_sol_rplc: any;
     p: Number = 1
+    save: Boolean = false;
+    sol_splice_no: number = 4;
 
     constructor(private crudService: CRUDService, private datePipe: DatePipe) {
     }
@@ -36,6 +44,7 @@ export class DistributeComponent implements OnInit {
         this.getEmployees();
         this.getSections();
         this.getVacations();
+        this.getVacationTypes();
     }
     getVacations() {
         this.crudService.get({
@@ -43,6 +52,14 @@ export class DistributeComponent implements OnInit {
         }).subscribe((res: any) => {
             this.displayError(res);
             this.vacations = res.data;
+        });
+    }
+    getVacationTypes() {
+        this.crudService.get({
+            url: 'api/vacationType'
+        }).subscribe((res: any) => {
+            this.displayError(res);
+            this.vacationTypes = res.data;
         });
     }
     getSections() {
@@ -61,7 +78,7 @@ export class DistributeComponent implements OnInit {
             this.availableServingAreas = res.data;
         });
     }
-    sol_splice_no: number = 4;
+
     getEmployees() {
         this.crudService.get({
             url: 'api/employee'
@@ -69,10 +86,18 @@ export class DistributeComponent implements OnInit {
             this.displayError(res);
             this.soliders_arr = res.data;
 
-            let availableSoliders = res.data.filter(e => e.available === true);
+            let availableSoliders = res.data.filter(e => e.available && e.dutiable);
             this.sol_splice_no = availableSoliders.filter(ele => ele.onDuty).length - availableSoliders.filter(ele => !ele.onDuty).length;
+
+
+
         });
     }
+
+    rsv_soliders() {
+
+    }
+
     getDists() {
         this.crudService.get({
             url: 'api/distribute'
@@ -82,14 +107,20 @@ export class DistributeComponent implements OnInit {
             this.fdists = res.data;
         });
     }
-    save: Boolean = false;
+    extRst = []
     distribute() {
 
-        let _arr = this.soliders_arr.filter(e => e.available === true);
+        let _arr = this.soliders_arr.filter(e => e.available === true && e.dutiable);
+        let ext = _arr.filter(e => e.extraServices > 0);
+
         this.soliderOnDuty = _arr.filter(ele => ele.onDuty);
         this.soliderOnRest = _arr.filter(ele => !ele.onDuty);
 
-        this.srchSoliders = _arr;// (this.soliderOnRest.length > 0) ? this.soliderOnRest : this.soliderOnDuty;
+        // this.randomizeSource();
+
+        this.extSrvs = ext;
+        this.extRst = _arr.filter(e => e.vacation.name.includes("راحة"));
+        this.srchSoliders = (ext.length > 0) ? ext : _arr.filter(e => e.onDuty === false);
 
         this.ctrSrvs = [];
         this.availableServingAreas.map((sa, i) => {
@@ -112,14 +143,35 @@ export class DistributeComponent implements OnInit {
         solider.extra.shiftAreas = { serviceArea: sa.name, shiftNumber: shift, distDate: new Date() };
         this.soliderOnRest = this.soliderOnRest.filter(ele => ele._id != solider._id);
         this.soliderOnDuty = this.soliderOnDuty.filter(ele => ele._id != solider._id);
+        this.extSrvs = this.extSrvs.filter(ele => ele._id != solider._id);
+        // this.extRst = this.extRst.filter(ele => ele._id != solider._id);
         return solider;
     }
 
     getSolider() {
-        let arr = (this.soliderOnRest.length > 0) ? this.soliderOnRest : this.soliderOnDuty.sort(e => e.extra.shiftAreas.length)//.splice(0, this.sol_splice_no);
+
+        // Get random solider from random array of soliders [Rest  vacation type , soliders on rest , extra services] 
+        // let fdt = (this.soliderOnRest.length > 0) ? this.soliderOnRest.sort(e => e.extra.shiftAreas.length) : this.soliderOnDuty.sort(e => e.extra.shiftAreas.length)
+        // let fdd = this.extRst;
+        // let container = [fdt, fdd, this.extSrvs];
+
+        let arr = (this.extSrvs.length > 0) ? this.extSrvs : (this.soliderOnRest.length > 0) ? this.soliderOnRest.sort(e => e.extra.shiftAreas.length) : this.soliderOnDuty.sort(e => e.extra.shiftAreas.length).reverse();//this.randomizeSource();
         const indx = Math.floor(Math.random() * arr.length);
         return arr[indx];
     }
+
+    randomizeSource() {
+        let arr = this.soliderOnRest;
+        if (this.extRst.length > 0) arr = arr.concat(this.extRst);
+        if (this.extSrvs.length > 0) arr = arr.concat(this.extSrvs);
+
+        // Get all available solider who has regular vacation and they are in rest status and do the same for Rest vacation 
+        // Get the onDuty 
+        // Set var for each of 'em 
+        // Randomize 
+        
+    }
+
 
     saveChanges() {
         let ctrSrvs = this.ctrSrvs;
@@ -130,13 +182,12 @@ export class DistributeComponent implements OnInit {
         });
         this.addDistribution(_arr);
         this.updateSoliders();
-        
+
     }
     filterSoliders(srch) {
-        let arr_filter = this.soliders_arr.filter(e => e.available === true && e.onDuty);
+        let arr_filter = this.soliders_arr.filter(e => e.available && e.dutiable && !e.onDuty);
         this.srchSoliders = arr_filter.filter(sol => sol.name.includes(srch) || sol.militaryId.includes(srch));
     }
-    rplcSoliders = []
     prSoliders(srch) {
         let arr_filter = this.soliders_arr.filter(e => e.available === true && e.section.name === this.curr_sdu.curr_sol.section.name);
         this.rplcSoliders = arr_filter.filter(sol => sol.name.includes(srch) || sol.militaryId.includes(srch));
@@ -150,6 +201,7 @@ export class DistributeComponent implements OnInit {
             curr_sec: sdu.srvSec,
             curr_sol: sol
         };
+        this.rplcSoliders = this.soliders_arr.filter(e => e.available === true && e.section.name === this.curr_sdu.curr_sol.section.name);
     }
 
     curr_sol_destination(sol) {
@@ -157,7 +209,6 @@ export class DistributeComponent implements OnInit {
     }
     replace_destination() {
         this.ctrSrvs
-            //.filter(ctr => ctr.srvSec.name === this.curr_sdu.curr_sec.name)
             .map((e) => {
                 let arr = e.srvSolds;
                 let trgs = arr.filter(srs => srs.militaryId === this.curr_sdu.curr_sol.militaryId)[0];
@@ -182,12 +233,46 @@ export class DistributeComponent implements OnInit {
                     arr.splice(index_replace, 1, trg);
                 }
 
-
                 e.srvSolds = arr;
                 document.getElementById('cancleModal').click();
 
             })
 
+    }
+    exchangeDist: any = {};
+    ex_target: any = {};
+    ex_sol: any = {};
+    exchangeable = [];
+
+    exchange() {
+        this.exchangeDist.soliders.map(e => {
+            let arr = e.srcSolds;
+            let index_target = arr.indexOf(this.ex_target);
+            if (index_target >= 0) {
+                arr.splice(index_target, 1, this.ex_sol);
+                this.crudService.post({
+                    url: `api/exchange`,
+                    body: { target: this.ex_target._id, replaced: this.ex_sol._id, created_at: new Date(), dist: this.exchangeDist._id }
+                }).subscribe((res: any) => {
+                    this.displayError(res);
+                    document.getElementById('cancleEXModal').click();
+                    alert('تمت الميادلة بنجاح');
+                });
+            }
+        })
+
+    }
+
+    getLastService() {
+        this.crudService.get({
+            url: `api/distribute/last`
+        }).subscribe((res: any) => {
+            this.displayError(res);
+            this.exchangeDist = res.data;
+            this.exchangeable = (this.soliderOnRest.length > 0) ?
+                this.soliderOnRest.sort(e => e.extra.shiftAreas.length).slice(0, 5) :
+                this.soliders_arr.filter(e => e.available && e.dutiable && !e.onDuty).sort(e => e.extra.shiftAreas.length).slice(0, 5);
+        });
     }
 
     addDistribution(_arr) {
@@ -203,7 +288,7 @@ export class DistributeComponent implements OnInit {
     updateSoliders() {
         let ctrSrvs = this.ctrSrvs;
         ctrSrvs.map((srvs) => srvs.srvSolds.map(sol => this.updtSra(sol, true)));
-        this.soliderOnDuty.map(sol => this.updateEmp(sol._id, { onDuty: false, updated_at: new Date() }));
+        this.soliderOnDuty.map(sol => this.updateEmp(sol._id, { onDuty: false, updated_at: new Date(), extraServices: sol.extraServices }));
         this.save = false;
         alert('تم الحفظ')
     }
@@ -220,8 +305,14 @@ export class DistributeComponent implements OnInit {
     }
 
     updateEmp(_id, body) {
-        if (body.onDuty != undefined) {
-            this.soliders_arr.filter(e => e.available === true && e._id === _id).map(e => e.onDuty = body.onDuty);
+
+        let _sol = this.soliders_arr.filter(e => e.available === true && e._id === _id)[0];
+        if (_sol && body.onDuty != undefined) {
+            _sol.onDuty = body.onDuty;
+        }
+        if (_sol && _sol.extraServices > 0) {
+            _sol.extraServices -= 1;
+            body.extraServices = _sol.extraServices;
         }
         this.crudService.put({
             url: `api/employee/${_id}`,
@@ -245,49 +336,51 @@ export class DistributeComponent implements OnInit {
     }
     prdc_vct = []
     periodicVacation() {
+        this.prdc_vct = []
         let _arr = this.cmbEmployees();
         _arr.map(arr => {
-            for (let index = 0; index < this.sys_period; index++) {
-                let indx = arr.employees.length / this.sys_period;
+            let count = arr.section.vacationType.durationCount;
+            for (let index = 0; index < count; index++) {
+                let indx = arr.employees.length / count;
                 let solds = [];
                 arr.employees.slice(index * indx, indx * (index + 1)).map(ele => {
                     ele.vacationPeriod = index + 1;
-                    console.log(ele.vacationPeriod)
                     solds.push(ele);
                 });
                 this.prdc_vct.push({
                     period: ` دورية ${index + 1} `,
                     sec_name: arr.section.name,
+                    periodCount: count,
                     soliders: solds
                 });
             }
         });
         this.rplcSoliders = this.soliders_arr;
     }
+    changePeriod() {
+        this.prdc_vct = [];
+    }
     pr_target() {
         this.prdc_vct
             .map((e) => {
                 let arr = e.soliders;
-                let trgs = arr.filter(srs => srs.militaryId === this.curr_sdu.curr_sol.militaryId)[0];
-                let replace = arr.filter(srs => srs.militaryId === this.curr_sol_rplc.militaryId)[0];
+                let trgs = arr.filter(srs => srs.militaryId === this.curr_sdu.curr_sol.militaryId);
+                let replace = arr.filter(srs => srs.militaryId === this.curr_sol_rplc.militaryId);
 
-
-                let index_target = arr.indexOf(trgs);
-                let index_replace = arr.indexOf(replace);
-
-                let rplc = { ...this.curr_sol_rplc };
-                let trg = { ...this.curr_sdu.curr_sol };
-
-
-                rplc.vacationPeriod = this.curr_sdu.curr_sol.vacationPeriod;
-                trg.vacationPeriod = this.curr_sol_rplc.vacationPeriod;
-
-                if (index_target >= 0) {
-                    arr.splice(index_target, 1, rplc);
+                if (replace.length > 0) {
+                    let index_replace = arr.indexOf(replace[0]);
+                    let trg = { ...this.curr_sdu.curr_sol };
+                    trg.vacationPeriod = this.curr_sol_rplc.vacationPeriod;
+                    replace.map(e => e.vacationPeriod = this.curr_sdu.curr_sol.vacationPeriod);
+                    arr.splice(index_replace, 1, trg);
                 }
 
-                if (index_replace >= 0) {
-                    arr.splice(index_replace, 1, trg);
+                if (trgs.length > 0) {
+                    let index_target = arr.indexOf(trgs[0]);
+                    let rplc = { ...this.curr_sol_rplc };
+                    rplc.vacationPeriod = this.curr_sdu.curr_sol.vacationPeriod;
+                    trgs.map(e => e.vacationPeriod = this.curr_sol_rplc.vacationPeriod);
+                    arr.splice(index_target, 1, rplc);
                 }
                 e.soliders = arr;
                 document.getElementById('canclePrModal').click();
@@ -303,38 +396,40 @@ export class DistributeComponent implements OnInit {
         this.prdc_vct
             .map((e) => {
                 let arr = e.soliders;
-                arr.map(ele => this.updateEmp(ele._id, { vacationPeriod: ele.vacationPeriod, updated_at: new Date(), available: true }));
+                arr.map(ele => {
+                    this.updateEmp(ele._id, { vacationPeriod: ele.vacationPeriod, vacationType: ele.vacation._id, updated_at: new Date(), available: true })
+                });
             });
-
         alert('تم التوزيع');
+    }
+    prdSolider = [];
+    fprdsol(prv_period, vct) {
+        if (this.prdc_vct.length > 0) {
+            let _sl = []
+            this.prdc_vct
+                .map((e) => {
+                    let arr = e.soliders;
+                    arr.filter(e => e.vacationPeriod === parseInt(prv_period) && e.vacation._id === vct).map(e => _sl.push(e))
+                });
+            this.prdSolider = _sl;
+        } else {
+            this.prdSolider = this.soliders_arr.filter(e => e.vacationPeriod === parseInt(prv_period) && e.vacation._id === vct)
+        }
 
     }
-    prvApply(period) {
 
+    vct_period = ""
+    prvApply(period, vct) {
         this.soliders_arr
+            .filter(e => e.vacation._id == vct)
             .map(e => {
                 (e.vacationPeriod == parseInt(period)) ? this.updateEmployeeAvailability(e, false) : this.updateEmployeeAvailability(e, true)
             });
         alert('تم التوزيع');
 
-
     }
-
-
-    curr = [
-        { _id: 2, name: 'manga', extra: { shiftAreas: [{ _id: 1, name: 'tower' }, { _id: 2, name: 'b-back' }] } },
-        { _id: 1, name: 'a-bio', extra: { shiftAreas: [{ _id: 1, name: 'tower' }] } },
-        { _id: 3, name: 'kasper', extra: { shiftAreas: [{ _id: 1, name: 'tower' }, { _id: 2, name: 'b-back' }, { _id: 3, name: 'gate' }] } },
-        { _id: 4, name: 'Mubo', extra: { shiftAreas: [{ _id: 1, name: 'tower' }, { _id: 2, name: 'b-back' }, { _id: 3, name: 'gate' }, { _id: 4, name: 'tower' }] } }
-    ]
-    // Option funcs 
     resetDist() {
-        // let arr = this.curr;
-        // arr.sort(e => e.extra.shiftAreas.length).splice(0, 2);
-
-        // arr.splice(arr.indexOf(arr.filter(e => e._id == 2)[0]), 1, { _id: 3, name: 'replaced' });
-        // console.log(this.curr = arr);
-
+      
         this.dists.map((ds) => {
             this.crudService.delete({
                 url: `api/distribute/${ds._id}`
@@ -348,7 +443,7 @@ export class DistributeComponent implements OnInit {
         this.soliders_arr.map((ds) => {
             this.crudService.put({
                 url: `api/employee/${ds._id}`,
-                body: { vacationPeriod: 0, "extra.shiftAreas": [], onDuty: false }
+                body: { vacationPeriod: 0, "extra.shiftAreas": [], onDuty: false, available: true }
             }).subscribe((res: any) => {
                 this.displayError(res);
             })

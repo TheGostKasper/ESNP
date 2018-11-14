@@ -11,14 +11,17 @@ declare interface RouteInfo {
 
 export const ROUTES: RouteInfo[] = [
   { path: 'section', title: 'المحاور', icon: 'graphic_eq', class: '' },
+  { path: 'soliderTypes', title: 'الرتب', icon: 'weekend', class: '' },
   { path: 'solider', title: 'الجنود', icon: 'assignment_ind', class: '' },
   { path: 'rank', title: 'الخدمات', icon: 'store', class: '' },
-  { path: 'soliderTypes', title: 'الرتب', icon: 'weekend', class: '' },
+  { path: 'category', title: 'الاصناف', icon: 'search', class: 'fa fa-search' },
+  { path: 'subCategory', title: 'اصناف أخري', icon: 'weekend', class: 'active-pro' },
   { path: 'vacation', title: 'الاجازات', icon: 'weekend', class: '' },
+  { path: 'vacationType', title: 'الدوريات', icon: 'weekend', class: '' },
   { path: 'salary', title: 'المرتبات', icon: 'attach_money', class: '' },
-  { path: 'request', title: 'طلبات أخري', icon: 'weekend', class: 'active-pro' },
   { path: 'attendance', title: 'الحضور', icon: 'weekend', class: 'active-pro' },
-  // { path: 'search', title: 'بحث', icon: 'search', class: 'fa fa-search' },
+  { path: 'exchange', title: 'المبادلات', icon: 'weekend', class: 'active-pro' },
+  { path: 'item', title: 'المخازن', icon: 'weekend', class: 'active-pro' },
   { path: 'distribute', title: 'توزيع الخدمات', icon: 'search', class: 'fa fa-search' },
 ];
 

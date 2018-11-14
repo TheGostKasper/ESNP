@@ -8,23 +8,37 @@
             </div>
         </div>
     </div>
-    <div class="col-3 col-sm-3 col-lg-3">
+    <div class="col-2 col-sm-2 col-lg-2">
         <div class="form-group">
-            <select id="vprd" name="vprd" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="avb" (change)="filterSoliders()">
-                <option value="0" selected>كل العناصر</option>
-                <option value="false">اجازة</option>
-                <option value="true">متواجد</option>
+            <select id="dutiable" name="dutiable" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="dutiable"
+                (change)="filterSoliders()">
+                <option value="0">متاح/معفي</option>
+                <option value="true">متاح</option>
+                <option value="false">معفي</option>
             </select>
             <div class="lis-search">
                 <i class="fa fa-tags lis-primary"></i>
             </div>
         </div>
     </div>
-    <div class="col-3 col-sm-3 col-lg-3">
+    <div class="col-2 col-sm-2 col-lg-2">
+        <div class="form-group">
+            <select id="vprd" name="vprd" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="avb"
+                (change)="filterSoliders()">
+                <option value="0">اجازة/حاضر</option>
+                <option value="false">اجازة</option>
+                <option value="true">حاضر</option>
+            </select>
+            <div class="lis-search">
+                <i class="fa fa-tags lis-primary"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-2 col-sm-2 col-lg-2">
         <div class="form-group">
             <select id="period" name="period" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="period"
                 (change)="filterSoliders()">
-                <option value="" selected>كل العناصر</option>
+                <option value="" selected>خدمة/ خالي </option>
                 <option value="true">خدمة</option>
                 <option value="false">خالي</option>
             </select>
@@ -35,16 +49,17 @@
     </div>
     <div class="col-3 col-sm-3 col-lg-3">
         <div class="form-group">
-            <select id="vprd" name="vprd" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="vprd" (change)="filterSoliders()">
+            <select id="vprd" name="vprd" class="form-control border-top-0 border-left-0 border-right-0 rounded-0 pl-4" [(ngModel)]="vprd"
+                (change)="filterSoliders()">
                 <option value="0" selected>اختر نظام الاجازة</option>
-                <option *ngFor="let vct of vacations | slice:0:20 as total; index as i" value="{{i+1}}">{{vct.name}}</option>
+                <option *ngFor="let vct of vacationsType | slice:0:20 as total; index as i" value="{{vct._id}}">{{vct.name}}</option>
             </select>
             <div class="lis-search">
                 <i class="fa fa-tags lis-primary"></i>
             </div>
         </div>
     </div>
-  
+
 </div>
 <table class="table table-striped table-bordered">
     <thead>
@@ -55,16 +70,19 @@
             <th>المحور</th>
             <th>عدد الخدمات</th>
             <th>رقم الدورية</th>
+            <th>نوع الدورية</th>
             <th>التقيم</th>
-            <th>الحالة</th>
             <th>الحضور</th>
-            <th>تاريخ التسجيل</th>
+            <th>قابلية</th>
+            <th>خ-زيادة</th>
+            <th>الحالة</th>
+            <!-- <th>تاريخ التسجيل</th> -->
             <th></th>
         </tr>
     </thead>
     <tbody>
         <tr *ngIf="f_soliders.length==0">
-            <td colspan="10">لا توجد اي بيانات </td>
+            <td colspan="13">لا توجد اي بيانات </td>
         </tr>
         <tr *ngFor="let employee of f_soliders  | paginate: { itemsPerPage: 10, currentPage: p } | slice:0:80 as total; index as i;">
             <td>{{ i+1 }}</td>
@@ -80,20 +98,25 @@
             <td>
                 {{employee.vacationPeriod ? employee.vacationPeriod : '---'}}
             </td>
+            <td>
+                {{employee.vacation ? employee.vacation.name : '---'}}
+            </td>
             <td>{{employee.rate ? employee.rate: '--' }} / 10</td>
             <td>{{employee.available ? 'متواجد' : 'أجازة'}}</td>
+            <td>{{employee.dutiable ? 'متاح' : 'معفي'}}</td>
+            <td>{{employee.extraServices}}</td>
             <td>{{employee.onDuty ? 'خدمة' : 'خالي'}}</td>
-            <td>{{employee.created_at | date:'dd/MM/yyyy'}}</td>
+            <!-- <td>{{employee.created_at | date:'dd/MM/yyyy'}}</td> -->
             <td>
                 <div class="btn-group">
                     <button type="button" class="bs-margin btn btn-danger" data-toggle="modal" data-target=".bs-example-modal-sm" (click)="confirmSelection(employee)">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true">حذف</span>
+                        <span class="fa fa-remove" aria-hidden="true"></span>
                     </button>
                     <button class="bs-margin btn btn-info" data-toggle="modal" data-target=".bs-edit-employee" (click)="confirmSelection(employee)">
-                        <span class="glyphicon glyphicon-geer" aria-hidden="true">تعديل</span>
+                        <span class="fa fa-edit" aria-hidden="true"></span>
                     </button>
-                    <button class="bs-margin btn btn-primary" data-toggle="modal" data-target=".bs-money-employee" (click)="confirmSelection(employee)">
-                        <span class="glyphicon glyphicon-geer" aria-hidden="true">قبض</span>
+                    <button class="bs-margin btn btn-default" data-toggle="modal" data-target=".bs-money-employee" (click)="confirmSelection(employee)">
+                        <span class="fa fa-money" aria-hidden="true"></span>
                     </button>
                 </div>
             </td>
@@ -111,6 +134,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="row form-group">
+                        <label for="inputname" class="col-sm-2 col-form-label">الاسم</label>
+                        <div class="col-sm-8">
+                            <input type="text" required id="a_name" name="a_name" [(ngModel)]="employee.name" required class="form-control" placeholder="الاسم بالكامل">
+                        </div>
+                    </div>
+                    <div class="row form-group">
                         <label for="inputname" class="col-sm-2 col-form-label">الرقم العسكري</label>
                         <div class="col-sm-8">
                             <input type="text" required id="a_militaryId" name="a_militaryId" [(ngModel)]="employee.militaryId" required class="form-control"
@@ -127,32 +156,27 @@
                         </div>
                     </div>
                     <div class="row form-group">
-                            <label for="inputname" class="col-sm-2 col-form-label">المحور</label>
-                            <div class="col-sm-8">
-                                <select id="e_sec" name="ee_sec" class="app-ctrl form-control" [(ngModel)]="employee.section._id">
-                                    <option value="">اخنر المحور</option>
-                                    <option *ngFor="let sec of sections | slice:0:80 as total; index as i" value="{{sec._id}}">{{sec.name}}</option>
-                                </select>
-                            </div>
+                        <label for="inputname" class="col-sm-2 col-form-label">المحور</label>
+                        <div class="col-sm-8">
+                            <select id="e_sec" name="ee_sec" class="app-ctrl form-control" [(ngModel)]="employee.section._id">
+                                <option value="">اخنر المحور</option>
+                                <option *ngFor="let sec of sections | slice:0:80 as total; index as i" value="{{sec._id}}">{{sec.name}}</option>
+                            </select>
                         </div>
-                    <div class="row form-group">
+                    </div>
+                    <!-- <div class="row form-group">
                         <label for="inputname" class="col-sm-2 col-form-label">البريد الالكتروني</label>
                         <div class="col-sm-8">
                             <input type="email" required id="a_emaul" name="a_email" [(ngModel)]="employee.email" class="form-control" placeholder="البريد الالكتروني">
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row form-group">
                         <label for="inputname" class="col-sm-2 col-form-label">رقم المرور</label>
                         <div class="col-sm-8">
                             <input type="password" required id="a_pass" name="a_pass" [(ngModel)]="employee.password" class="form-control" placeholder="رقم المرور">
                         </div>
                     </div>
-                    <div class="row form-group">
-                        <label for="inputname" class="col-sm-2 col-form-label">الاسم</label>
-                        <div class="col-sm-8">
-                            <input type="text" required id="a_name" name="a_name" [(ngModel)]="employee.name" required class="form-control" placeholder="الاسم بالكامل">
-                        </div>
-                    </div>
+
 
                     <div class="row form-group">
                         <label for="inputdescription" class="col-sm-2 col-form-label">رقم التليفون</label>
@@ -226,13 +250,11 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <div class="col-sm-2">الحالة</div>
-                        <div class="col-sm-4 app-mr">
-                            <label class="form-check-label app-pr" for="gridCheck1">
-                                خدمة
-                            </label>
-                            <input class="form-check-input" type="checkbox" id="ee_onDuty" name="ee_onDuty" [(ngModel)]="curr_employee.onDuty">
+                    <div class="row form-group">
+                        <label for="extraServices" class="col-sm-2 col-form-label"> الخدمات الزيادة</label>
+                        <div class="col-sm-8">
+                            <input type="number" min="0" max="10" required id="a_extraServices" name="a_extraServices" [(ngModel)]="curr_employee.extraServices"
+                                class="form-control" placeholder="">
                         </div>
                     </div>
 
@@ -246,11 +268,29 @@
                         </div>
                     </div>
                     <div class="row form-group">
+                        <label for="inputname" class="col-sm-2 col-form-label">نوع الاجازة</label>
+                        <div class="col-sm-8">
+                            <select id="e_vact" name="ee_vact" class="app-ctrl form-control" [(ngModel)]="curr_employee.vacation._id">
+                                <option value=""> نوع الاجازة</option>
+                                <option *ngFor="let vac of vacationsType | slice:0:80 as total; index as i" value="{{vac._id}}">{{vac.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label for="inputname" class="col-sm-2 col-form-label">الدورية</label>
+                        <div class="col-sm-8">
+                            <select id="e_vac" name="ee_vac" class="app-ctrl form-control" [(ngModel)]="curr_employee.vacationPeriod">
+                                <option value="">اخنر الدورية</option>
+                                <option *ngFor="let vac of vacations | slice:0:80 as total; index as i" value="{{i+1}}">{{vac.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- <div class="row form-group">
                         <label for="inputname" class="col-sm-2 col-form-label">البريد الالكتروني</label>
                         <div class="col-sm-8">
                             <input type="email" required id="a_email" name="a_email" [(ngModel)]="curr_employee.email" class="form-control" placeholder="البريد الالكتروني">
                         </div>
-                    </div>
+                    </div> -->
 
 
                     <div class="row form-group">
@@ -282,6 +322,25 @@
                         <div class="col-sm-8">
                             <input type="date" required class="form-control" placeholder="نهاية التجنيد" name="leaveDate" required [(ngModel)]="curr_employee.leaveDate">
                         </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-2">الحالة</div>
+                    <div class="col-sm-4 app-mr">
+                        <label class="form-check-label app-pr" for="ee_onDuty">
+                            خدمة
+                        </label>
+                        <input class="form-check-input" type="checkbox" id="ee_onDuty" name="ee_onDuty" [value]="curr_employee.onDuty" [(ngModel)]="curr_employee.onDuty">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-2">القابلية</div>
+                    <div class="col-sm-4 app-mr">
+                        <label class="form-check-label app-pr" for="ee_dutiable">
+                            متاح للخدمة
+                        </label>
+                        <input class="form-check-input" type="checkbox" id="ee_dutiable" name="ee_onDuty" [(ngModel)]="curr_employee.dutiable">
                     </div>
                 </div>
                 <div class="modal-footer">

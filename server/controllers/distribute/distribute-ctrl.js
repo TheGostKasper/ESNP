@@ -7,7 +7,7 @@ module.exports = function (app) {
             getLastAsync(req.body).then(data => {
                 res.send({ data: data, message: "Distribute added successfully" });
             }).catch(err => {
-               
+
                 res.send({ data: null, err: err });
             });
         }).catch(err => console.log(err));
@@ -19,14 +19,21 @@ module.exports = function (app) {
             res.send({ data: null, err: err });
         });
     });
-
-    app.get('/api/distribute/:id', (req, res) => {
-        getDistributeAsync({ _id: req.params.id }).then(data => {
+    //api/distribute/date
+    app.get('/api/distribute/last', (req, res) => {
+        getDistributeAsync().then(data => {
+            res.send({ data: data[data.length - 1], message: "Distribute found" });
+        }).catch(err => {
+            res.send({ data: null, err: err });
+        });
+    });
+    app.get('/api/distribute/last', (req, res) => {
+        getDistributeAsync({ created_at: req.params.date }).then(data => {
             res.send({ data: data, message: "Distribute found" });
         }).catch(err => {
             res.send({ data: null, err: err });
         });
-    }); 
+    });
     app.post('/api/distribute/filterBy', (req, res) => {
         getDistributeAsync(req.body).then(data => {
             res.send({ data: data, message: "Distribute found" });

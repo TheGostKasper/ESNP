@@ -1,31 +1,32 @@
-
+<div id="m_scroll_top" class="m-scroll-top" data-toggle="modal" data-target=".bs-add-vacation">
+    <i class="fa fa-plus"></i>
+</div>
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
             <th>#</th>
-            <th>الاسم</th>
-            <th>الوصف</th>
-            <th>قيمة النقود</th>
+            <th>نوع الاجازة</th>
+            <th>دفعات الاجازة</th>
             <th>تاريخ التسجيل</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngIf="salaries.length==0">
-            <td colspan="6">لا توجد اي بيانات </td>
+        <tr *ngIf="vacations.length==0">
+            <td colspan="5">لا توجد اي بيانات </td>
         </tr>
-        <tr *ngFor="let salary of salaries | paginate: { itemsPerPage: 10, currentPage: p } | slice:0:80 as total; index as i;">
+        <tr *ngFor="let vacation of vacations | paginate: { itemsPerPage: 10, currentPage: di } | slice:0:80 as total; index as i;">
             <td>{{ i+1 }}</td>
-            <td>{{salary.employee.name}}</td>
-            <td>{{salary.name}}</td>
-            <td>{{salary.paidMoney}}</td>
-            <td>{{salary.month | date:'dd/MM/yyyy'}}</td>
+            <td>{{vacation.name}}</td>
+            <td>{{vacation.durationCount}}</td>
+            <td>{{vacation.created_at | date:'dd/MM/yyyy'}}</td>
             <td>
+
                 <div class="btn-group">
-                    <button type="button" class="bs-margin btn btn-danger" data-toggle="modal" data-target=".bs-example-modal-sm" (click)="confirmSelection(salary)">
+                    <button type="button" class="bs-margin btn btn-danger" data-toggle="modal" data-target=".bs-example-modal-sm" (click)="confirmSelection(vacation)">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true">حذف</span>
                     </button>
-                    <button class="bs-margin btn btn-info" data-toggle="modal" data-target=".bs-edit-salary" (click)="confirmSelection(salary)">
+                    <button class="bs-margin btn btn-info" data-toggle="modal" data-target=".bs-edit-vacation" (click)="confirmSelection(vacation)">
                         <span class="glyphicon glyphicon-geer" aria-hidden="true">تعديل</span>
                     </button>
                 </div>
@@ -33,33 +34,31 @@
         </tr>
     </tbody>
 </table>
-<pagination-controls (pageChange)="p = $event"></pagination-controls>
+<pagination-controls (pageChange)="di = $event"></pagination-controls>
 
-<div class="modal fade bs-edit-salary" tabIndex="-1" role="dialog" aria-labelledby="bsEditable" dir="rtl">
-    <form class="form-horizontal" (ngSubmit)="updatesalary(curr_salary)">
+
+<div class="modal fade bs-add-vacation" tabIndex="-1" role="dialog" aria-labelledby="bsAddvacation" dir="rtl">
+    <ns-root [fields]="fields" (nelected)="addVacation($event)"></ns-root>
+</div>
+
+<div class="modal fade bs-edit-vacation" tabIndex="-1" role="dialog" aria-labelledby="bsEditable" dir="rtl">
+    <form class="form-horizontal" (ngSubmit)="updateVacation(curr_vacation)">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="edtModal">تعديل</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row form-group">
-                        <label for="inputname" class="col-sm-2 control-label">الاسم</label>
+                    <div class="bs-row form-group">
+                        <label for="inputname" class="col-sm-2 control-label">النوع</label>
                         <div class="col-sm-8">
-                            <input type="text" required id="e_name" name="e_name" [(ngModel)]="curr_salary.name" required class="form-control" placeholder="اسم المحور">
+                            <input type="text" required id="s_name" name="s_name" [(ngModel)]="curr_vacation.name" required class="form-control" placeholder="نوع الأجازة">
                         </div>
                     </div>
-
-                    <div class="row form-group">
-                        <label for="inputdescription" class="col-sm-2 control-label">الوصف</label>
+                    <div class="bs-row form-group">
+                        <label for="inputname" class="col-sm-2 control-label">عدد دفعات الاجازة</label>
                         <div class="col-sm-8">
-                            <input type="text" required class="form-control" placeholder="وصف المحور" name="describtion" required [(ngModel)]="curr_salary.describtion">
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <label for="inputrate" class="col-sm-2 control-label">التقييم</label>
-                        <div class="col-sm-8">
-                            <input type="text" required class="form-control" placeholder="تقييم المحور" name="rate" required [(ngModel)]="curr_salary.rate">
+                            <input type="number" required id="s_durationCount" name="s_durationCount" [(ngModel)]="curr_vacation.durationCount" required class="form-control" placeholder="عدد دفعات الاجازة">
                         </div>
                     </div>
                 </div>
@@ -87,11 +86,11 @@
                 <h4 class="modal-title" id="myModalLabel">تحذير</h4>
             </div>
             <div class="modal-body">
-                هل انت متأكد من حذف هذا المحور؟
+                هل انت متأكد من حذف هذا نوع الأجازة؟
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" id="cancleModal" data-dismiss="modal">الغاء</button>
-                <button type="button" class="btn btn-danger" (click)="deleteSalary()">حذف</button>
+                <button type="button" class="btn btn-danger" (click)="deleteVacation()">حذف</button>
             </div>
         </div>
     </div>

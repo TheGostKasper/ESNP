@@ -60,7 +60,9 @@ module.exports = function (app) {
     }
 
     async function getServiceAreaAsync(option) {
-        return await ServiceArea.find(option).sort({ priority: 1 }).exec();
+        return await ServiceArea.find(option)
+            .sort({ priority: 1 })
+            .exec();
     }
     async function getLastAsync(body) {
         try {
@@ -69,5 +71,5 @@ module.exports = function (app) {
             res.send({ data: null, err: error });
         }
     }
-    
+
 }

@@ -1,0 +1,52 @@
+<!-- <div id="m_scroll_top" class="m-scroll-top" data-toggle="modal" data-target=".bs-add-exchange">
+    <i class="fa fa-plus"></i>
+</div> -->
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>تاريخ الخدمة</th>
+            <th> اسم المبدل</th>
+            <th>اسم المبادل </th>
+            <th>تاريخ التسجيل</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngIf="exchanges.length==0">
+            <td colspan="6">لا توجد اي بيانات </td>
+        </tr>
+        <tr *ngFor="let exchange of exchanges | paginate: { itemsPerPage: 10, currentPage: di } | slice:0:80 as total; index as i;">
+            <td>{{ i+1 }}</td>
+            <td>{{exchange.dist.created_at | date:'dd/MM/yyyy'}}</td>
+            <td>{{exchange.target.name}}</td>
+            <td>{{exchange.replaced.name}}</td>
+            <td>{{exchange.created_at | date:'dd/MM/yyyy'}}</td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="bs-margin btn btn-danger" data-toggle="modal" data-target=".bs-example-modal-sm" (click)="curr_exchange = exchange">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true">حذف</span>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<pagination-controls (pageChange)="di = $event"></pagination-controls>
+
+<div class="modal fade bs-example-modal-sm" tabIndex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h4 class="modal-title" id="myModalLabel">تحذير</h4>
+            </div>
+            <div class="modal-body">
+                هل انت متأكد ؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="cancleModal" data-dismiss="modal">الغاء</button>
+                <button type="button" class="btn btn-danger" (click)="deleteExchange()">حذف</button>
+            </div>
+        </div>
+    </div>
+</div>

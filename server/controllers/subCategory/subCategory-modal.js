@@ -3,10 +3,7 @@ var Schema = mongoose.Schema;
 
 var itemsSchema = new Schema({
     name: { type: String, required: true },
-    vacationType: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'VacationType' },
-    describtion: { type: String, required: false },
-    headMaster: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Employee' },
-    rate: { type: Number, default: 5 },
+    category: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Category' },
     created_at: { type: Date, required: true },
     updated_at: Date,
 });
@@ -19,5 +16,5 @@ itemsSchema.pre('save', (next) => {
     next();
 });
 
-var Section = mongoose.model('Section', itemsSchema);
-module.exports = Section;
+var SubCategory = mongoose.model('SubCategory', itemsSchema);
+module.exports = SubCategory;
